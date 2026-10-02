@@ -33,10 +33,7 @@
     ctaHow: "How it works", ctaInside: "What is inside",
     chip1: "No phone number", chip2: "Encrypted on your device", chip3: "iPhone · iOS 16+",
 
-    sceneNearby: "nearby · no internet",
-    m1: "No signal at all. Where are you?",
     m2: "By the campfire, two tents down 🏕",
-    composer: "Message",
     sceneLink: "Wi-Fi · Bluetooth",
     sceneNoServer: "No server involved",
 

@@ -553,115 +553,117 @@ h1, h2, h3 { font-weight: 800; letter-spacing: -0.02em; line-height: 1.08; margi
   to   { opacity: 1; transform: none; }
 }
 
-/* ---- Сцена: два телефона на прямой связи --------------------------------
-   Вся сцена меряется в em, а em — от ширины колонки: так она одинаково
-   собрана и на телефоне, и на широком экране, просто разного размера. */
+/* ---- Знак крупно -------------------------------------------------------
+   Меряется в em, а em — от ширины колонки: на телефоне и на широком экране
+   знак собран одинаково, просто разного размера. Плашки вокруг стоят в
+   процентах, чтобы их можно было увеличить на узком экране, не сдвинув. */
 
 .hero__art { container-type: inline-size; width: 100%; }
-.scene {
+.emblem {
   position: relative;
-  font-size: min(9.2px, 100cqi / 60);
-  width: 60em;
-  height: 64em;
+  font-size: min(9px, 100cqi / 56);
+  width: 56em;
+  height: 54em;
   margin-inline: auto;
+  display: grid;
+  place-items: center;
 }
-.scene__glow {
+.emblem__glow {
   position: absolute;
-  inset: 12% 8%;
+  inset: 8%;
   background: radial-gradient(closest-side, var(--accent-glow), transparent);
-  filter: blur(2em);
+  filter: blur(2.4em);
 }
-.scene__link { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.scene__beam { stroke: var(--accent); stroke-width: 0.9; stroke-linecap: round; opacity: 0.22; }
-.scene__dash {
-  stroke: var(--accent-2);
-  stroke-width: 0.28;
-  stroke-linecap: round;
-  stroke-dasharray: 0.2 1.1;
-  animation: dashFlow 0.9s linear infinite;
-}
-@keyframes dashFlow { to { stroke-dashoffset: -1.3; } }
-/* Точки ждут, пока обе успеют стартовать: до начала своего движения точка
-   стоит в углу сцены, и её там видно. */
-.scene__packet {
-  fill: #fff;
-  filter: drop-shadow(0 0 0.8px var(--accent)) drop-shadow(0 0 0.4px #fff);
-  opacity: 0;
-  animation: packetOn 0.4s ease 1.2s forwards;
-}
-@keyframes packetOn { to { opacity: 1; } }
 
-.phone {
-  position: absolute;
-  width: 23em;
-  height: 48em;
-  padding: 0.85em;
-  border-radius: 4.2em;
-  background: linear-gradient(150deg, #3a3a42 0%, #16161b 18%, #0c0c10 60%, #26262d 100%);
-  box-shadow:
-    inset 0 0 0 0.12em rgba(255, 255, 255, 0.16),
-    inset 0 0 0 0.45em #050507,
-    0 5em 9em -3em rgba(0, 0, 0, 0.95),
-    0 0 0 1px rgba(0, 0, 0, 0.6);
-}
-.phone--a { left: 0; top: 0; z-index: 2; }
-.phone--b { right: 0; top: 16em; z-index: 1; }
-
-.phone__screen {
-  position: relative;
-  height: 100%;
-  border-radius: 3.4em;
-  overflow: hidden;
-  background:
-    radial-gradient(120% 60% at 50% 0%, rgba(255, 255, 255, 0.05), transparent 60%),
-    #0b0b0f;
-  display: flex;
-  flex-direction: column;
-}
-.phone__screen::before {
+/* Волны — того же скруглённого квадрата, что и сама иконка. Две тихие
+   стоят на месте, три расходятся от знака, как сигнал. */
+.emblem::before,
+.emblem::after,
+.emblem__wave {
   content: "";
   position: absolute;
-  top: 0.9em; left: 50%;
-  width: 7.4em; height: 2.1em;
-  margin-left: -3.7em;
-  border-radius: 2em;
-  background: #000;
-  z-index: 2;
+  left: 50%; top: 50%;
+  width: 28em; height: 28em;
+  margin: -14em 0 0 -14em;
+  border-radius: 22.4%;
+  border: 1px solid var(--line);
+  pointer-events: none;
 }
-.phone__status {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 3.9em;
-  padding: 0.6em 2.4em 0 2.8em;
-  font-size: 1em;
-  color: var(--text);
+.emblem::before { transform: scale(1.42); }
+.emblem::after  { transform: scale(1.84); border-color: rgba(255, 255, 255, 0.05); }
+.emblem__wave {
+  border-color: var(--accent-line);
+  opacity: 0;
+  animation: wave 4.8s var(--ease) 1.4s infinite;
 }
-.phone__status b { font-size: 1.15em; font-weight: 700; }
-/* Полоски сигнала все погашены: сотовой сети нет, а переписка идёт. */
-.bars { display: flex; align-items: flex-end; gap: 0.18em; height: 1.05em; }
-.bars i { width: 0.3em; border-radius: 0.1em; background: rgba(255, 255, 255, 0.22); }
-.bars i:nth-child(1) { height: 35%; }
-.bars i:nth-child(2) { height: 55%; }
-.bars i:nth-child(3) { height: 78%; }
-.bars i:nth-child(4) { height: 100%; }
+.emblem__wave:nth-of-type(2) { animation-delay: 3s; }
+.emblem__wave:nth-of-type(3) { animation-delay: 4.6s; }
+@keyframes wave {
+  0%   { opacity: 0.9; transform: scale(1); }
+  100% { opacity: 0;   transform: scale(1.95); }
+}
 
-.chat__head {
-  display: flex;
+.emblem__tile {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 28em;
+  height: 28em;
+  border-radius: 22.4%;
+  color: #fff;
+  background: radial-gradient(120% 120% at 28% 0%, #1d1d24 0%, #050507 62%);
+  border: 1px solid var(--line-2);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 3em 8em -2em rgba(0, 0, 0, 0.95),
+    0 0 12em -2em var(--accent-glow);
+}
+.emblem__tile svg { width: 60%; height: 60%; overflow: visible; }
+
+/* Знак про связь двоих — и прочерчивается связью, а не просто появляется. */
+.draw {
+  stroke-dasharray: var(--len, 400);
+  stroke-dashoffset: var(--len, 400);
+  animation: draw 1.1s var(--ease-io) calc(0.35s + var(--wait, 0s)) forwards;
+}
+@keyframes draw { to { stroke-dashoffset: 0; } }
+
+/* Точка, бегущая по связи. Появляется, когда линия уже прочерчена. */
+.spark {
+  fill: var(--accent);
+  opacity: 0;
+  filter: drop-shadow(0 0 14px var(--accent));
+  animation: sparkOn 0.4s ease 1.6s forwards;
+}
+@keyframes sparkOn { to { opacity: 1; } }
+
+.float {
+  position: absolute;
+  z-index: 2;
+  display: inline-flex;
   align-items: center;
-  gap: 1em;
-  padding: 1em 1.4em 1.1em;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-}
-.chat__who { display: flex; flex-direction: column; line-height: 1.25; min-width: 0; }
-.chat__who b { font-size: 1.3em; }
-.chat__who small {
-  font-size: 1em;
-  color: var(--accent);
+  gap: 0.6em;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-family: var(--mono);
+  font-size: max(1.3em, 10px);
+  letter-spacing: 0.04em;
+  padding: 0.75em 1.1em;
+  border-radius: 2em;
+  color: var(--text-dim);
+  background: rgba(14, 14, 18, 0.78);
+  -webkit-backdrop-filter: blur(12px);
+          backdrop-filter: blur(12px);
+  border: 1px solid var(--line-2);
+  box-shadow: 0 1.6em 3em -1.4em rgba(0, 0, 0, 0.9);
+  animation: bob 7s ease-in-out infinite;
 }
+.float .ico { width: 1.35em; height: 1.35em; color: var(--accent); }
+.float--1 { left: 0;  top: 66%; animation-delay: -2s; }
+.float--2 { right: 0; top: 10%; animation-delay: -4.5s; }
+.float--3 { right: 4%; top: 84%; }
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+/* ---- Общие для иллюстраций: аватары и пузыри сообщений ------------------ */
 
 .ava {
   display: grid;
@@ -676,18 +678,7 @@ h1, h2, h3 { font-weight: 800; letter-spacing: -0.02em; line-height: 1.08; margi
 }
 .ava--b { background: linear-gradient(140deg, #ffb27a, #ff5a7a); }
 .ava--c { background: linear-gradient(140deg, #9be7a0, #2fb8a0); }
-.scene .ava { font-size: 1.3em; width: 2.6em; height: 2.6em; }
 
-.chat__body {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  gap: 0.55em;
-  padding: 1.2em;
-}
-
-/* Пузыри сообщений — общие для сцены, мини-чата и схемы шифрования. */
 .msg {
   width: fit-content;
   max-width: 86%;
@@ -697,136 +688,8 @@ h1, h2, h3 { font-weight: 800; letter-spacing: -0.02em; line-height: 1.08; margi
   line-height: 1.32;
   overflow-wrap: anywhere;
 }
-.msg--in  { align-self: flex-start; background: #1d1d23; color: var(--text); border-bottom-left-radius: 6px; transform-origin: 0 100%; }
-.msg--out { align-self: flex-end; background: var(--accent-fill); color: var(--on-accent); border-bottom-right-radius: 6px; transform-origin: 100% 100%; }
-.scene .msg { font-size: 1.25em; padding: 0.6em 0.85em; border-radius: 1.25em; max-width: 84%; }
-.scene .msg--in  { border-bottom-left-radius: 0.4em; }
-.scene .msg--out { border-bottom-right-radius: 0.4em; }
-
-/* Фотография в переписке — нарисованный вечер в горах, без картинки. */
-.scene .msg--photo { padding: 0.3em; width: 64%; }
-.photo {
-  position: relative;
-  display: block;
-  aspect-ratio: 4 / 3;
-  border-radius: 0.95em;
-  overflow: hidden;
-  background: linear-gradient(180deg, #1b2450 0%, #6a4a8c 48%, #f08a5d 78%, #ffc47a 100%);
-}
-.photo::before {
-  content: "";
-  position: absolute;
-  inset: 38% 0 0;
-  background: #120f22;
-  clip-path: polygon(0 62%, 18% 22%, 30% 44%, 47% 4%, 63% 40%, 76% 18%, 100% 56%, 100% 100%, 0 100%);
-}
-.photo::after {
-  content: "";
-  position: absolute;
-  right: 22%; top: 16%;
-  width: 0.9em; height: 0.9em;
-  border-radius: 50%;
-  background: #fff3d6;
-  box-shadow: 0 0 1.2em 0.3em rgba(255, 220, 160, 0.5);
-}
-
-.msg--voice { display: flex; align-items: center; gap: 0.55em; }
-.voice__play {
-  width: 0; height: 0;
-  border-style: solid;
-  border-width: 0.45em 0 0.45em 0.72em;
-  border-color: transparent transparent transparent currentColor;
-}
-.wave { display: flex; align-items: center; gap: 0.16em; height: 1.4em; }
-.wave i { display: block; width: 0.16em; height: calc(var(--h) * 1.3em); border-radius: 1em; background: currentColor; opacity: 0.85; }
-.msg--voice small { font-size: 0.8em; opacity: 0.75; }
-
-.typing {
-  display: flex;
-  gap: 0.3em;
-  align-self: flex-start;
-  padding: 0.9em 1em;
-  border-radius: 1.4em 1.4em 1.4em 0.4em;
-  background: #1d1d23;
-  transform-origin: 0 100%;
-}
-.typing i { width: 0.55em; height: 0.55em; border-radius: 50%; background: var(--text-mute); animation: typing 1.2s ease-in-out infinite; }
-.typing i:nth-child(2) { animation-delay: 0.15s; }
-.typing i:nth-child(3) { animation-delay: 0.3s; }
-@keyframes typing { 0%, 60%, 100% { transform: none; opacity: 0.5; } 30% { transform: translateY(-0.35em); opacity: 1; } }
-
-.chat__input {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 3.6em;
-  margin: 0 1em 1.8em;
-  padding: 0 0.5em 0 1.3em;
-  border-radius: 2em;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  background: rgba(255, 255, 255, 0.03);
-}
-.chat__input span { font-size: 1.15em; color: var(--text-mute); }
-.chat__input i { width: 2.6em; height: 2.6em; border-radius: 50%; background: var(--accent-fill); position: relative; }
-.chat__input i::before {
-  content: "";
-  position: absolute;
-  left: 50%; top: 52%;
-  width: 0.7em; height: 0.7em;
-  border-left: 0.2em solid var(--on-accent);
-  border-top: 0.2em solid var(--on-accent);
-  transform: translate(-50%, -35%) rotate(45deg);
-}
-
-/* Сообщения в сцене появляются по очереди — каждое со своей задержкой. */
-.pop { animation: pop 0.6s var(--ease) var(--t, 0s) both; }
-@keyframes pop {
-  from { opacity: 0; transform: translateY(0.8em) scale(0.92); }
-  to   { opacity: 1; transform: none; }
-}
-
-.scene__badge,
-.float {
-  position: absolute;
-  z-index: 3;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6em;
-  white-space: nowrap;
-  font-family: var(--mono);
-  font-size: 1.15em;
-  letter-spacing: 0.04em;
-  padding: 0.75em 1.1em;
-  border-radius: 2em;
-  background: rgba(14, 14, 18, 0.78);
-  -webkit-backdrop-filter: blur(12px);
-          backdrop-filter: blur(12px);
-  border: 1px solid var(--line-2);
-  box-shadow: 0 1.6em 3em -1.4em rgba(0, 0, 0, 0.9);
-}
-.scene__badge .ico, .float .ico { width: 1.35em; height: 1.35em; color: var(--accent); }
-
-.scene__badge { left: 50%; top: 50%; transform: translate(-50%, -50%); color: var(--text); }
-.scene__badge::before,
-.scene__badge::after {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  border: 1px solid var(--accent);
-  opacity: 0;
-  animation: ring 2.6s var(--ease) infinite;
-}
-.scene__badge::after { animation-delay: 1.3s; }
-@keyframes ring {
-  0%   { opacity: 0.7; transform: scale(1); }
-  100% { opacity: 0; transform: scale(1.35, 1.9); }
-}
-
-.float { color: var(--text-dim); animation: bob 7s ease-in-out infinite; }
-.float--1 { left: 0.5em; top: 52.5em; }
-.float--2 { right: 0.5em; top: 7em; animation-delay: -3.5s; }
-@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-0.9em); } }
+.msg--in  { align-self: flex-start; background: #1d1d23; color: var(--text); border-bottom-left-radius: 6px; }
+.msg--out { align-self: flex-end; background: var(--accent-fill); color: var(--on-accent); border-bottom-right-radius: 6px; }
 
 /* ---- Бегущая строка ---------------------------------------------------- */
 
@@ -1857,8 +1720,7 @@ h1, h2, h3 { font-weight: 800; letter-spacing: -0.02em; line-height: 1.08; margi
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
-  .wire__dot, .cipher__arrow i, .scene__packet,
-  .scene__badge::before, .scene__badge::after { display: none; }
+  .wire__dot, .cipher__arrow i, .spark, .emblem__wave { display: none; }
   .ticker__track { flex-wrap: wrap; width: auto; justify-content: center; }
   .ticker__list[aria-hidden] { display: none; }
   .ticker__list { flex-wrap: wrap; justify-content: center; row-gap: 10px; }

@@ -177,71 +177,34 @@
         </ul>
       </div>
 
-      <!-- Сцена: два телефона стоят так же, как фигуры на иконке, — по
-           диагонали, и связаны той же прямой. Переписка — иллюстрация того,
-           что приложение делает, а не снимок экрана. -->
+      <!-- Знак крупно: две фигуры прочерчиваются, и по прямой между ними
+           бежит точка — это и есть связь, о которой всё приложение. Волны
+           вокруг — сигнал, который телефоны ловят друг от друга. -->
       <div class="hero__art" aria-hidden="true">
-        <div class="scene">
-          <div class="scene__glow"></div>
-          <svg class="scene__link" viewBox="0 0 60 64">
-            <line x1="22" y1="24" x2="38" y2="40" class="scene__beam"/>
-            <line x1="22" y1="24" x2="38" y2="40" class="scene__dash"/>
-            <circle r="0.9" class="scene__packet">
-              <animateMotion dur="1.8s" repeatCount="indefinite" path="M22,24 L38,40"
-                             calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines="0.65 0 0.35 1"/>
-            </circle>
-            <circle r="0.9" class="scene__packet">
-              <animateMotion dur="1.8s" begin="0.9s" repeatCount="indefinite" path="M38,40 L22,24"
-                             calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines="0.65 0 0.35 1"/>
-            </circle>
-          </svg>
-
-          <div class="phone phone--a">
-            <div class="phone__screen">
-              <div class="phone__status"><b>9:41</b><span class="bars"><i></i><i></i><i></i><i></i></span></div>
-              <div class="chat__head">
-                <span class="ava">M</span>
-                <span class="chat__who"><b>murad</b><small data-i18n="sceneNearby">рядом · без интернета</small></span>
-              </div>
-              <div class="chat__body">
-                <div class="msg msg--out msg--photo"><span class="photo"></span></div>
-                <div class="msg msg--out" data-i18n="m1">Сети нет вообще. Ты где?</div>
-                <div class="msg msg--in pop" style="--t:1.5s" data-i18n="m2">У костра, через две палатки 🏕</div>
-                <div class="msg msg--out msg--voice pop" style="--t:2.9s">
-                  <i class="voice__play"></i>
-                  <span class="wave"><i style="--h:.35"></i><i style="--h:.6"></i><i style="--h:.9"></i><i style="--h:.5"></i><i style="--h:.75"></i><i style="--h:1"></i><i style="--h:.6"></i><i style="--h:.4"></i><i style="--h:.8"></i><i style="--h:.55"></i><i style="--h:.9"></i><i style="--h:.35"></i><i style="--h:.65"></i><i style="--h:.45"></i></span>
-                  <small>0:07</small>
-                </div>
-              </div>
-              <div class="chat__input"><span data-i18n="composer">Сообщение</span><i></i></div>
-            </div>
+        <div class="emblem">
+          <div class="emblem__glow"></div>
+          <span class="emblem__wave"></span>
+          <span class="emblem__wave"></span>
+          <span class="emblem__wave"></span>
+          <div class="emblem__tile">
+            <svg viewBox="96 90 520 520">
+              <rect x="118" y="112" width="196" height="196" rx="52" fill="none"
+                    stroke="currentColor" stroke-width="44" class="draw" style="--len:900"/>
+              <line x1="300" y1="296" x2="412" y2="404" stroke="currentColor"
+                    stroke-width="44" stroke-linecap="round" class="draw" style="--len:160; --wait:0.7s"/>
+              <rect x="398" y="392" width="196" height="196" rx="52" fill="none"
+                    stroke="currentColor" stroke-width="44" class="draw" style="--len:900; --wait:0.35s"/>
+              <circle class="spark" r="15">
+                <animateMotion dur="2.6s" begin="1.6s" repeatCount="indefinite"
+                               keyPoints="0;1" keyTimes="0;1"
+                               calcMode="spline" keySplines="0.65 0 0.35 1"
+                               path="M300,296 L412,404"/>
+              </circle>
+            </svg>
           </div>
-
-          <div class="phone phone--b">
-            <div class="phone__screen">
-              <div class="phone__status"><b>9:41</b><span class="bars"><i></i><i></i><i></i><i></i></span></div>
-              <div class="chat__head">
-                <span class="ava ava--b">A</span>
-                <span class="chat__who"><b>aysel</b><small data-i18n="sceneNearby">рядом · без интернета</small></span>
-              </div>
-              <div class="chat__body">
-                <div class="msg msg--in msg--photo"><span class="photo"></span></div>
-                <div class="msg msg--in" data-i18n="m1">Сети нет вообще. Ты где?</div>
-                <div class="msg msg--out pop" style="--t:0.9s" data-i18n="m2">У костра, через две палатки 🏕</div>
-                <div class="msg msg--in msg--voice pop" style="--t:3.5s">
-                  <i class="voice__play"></i>
-                  <span class="wave"><i style="--h:.35"></i><i style="--h:.6"></i><i style="--h:.9"></i><i style="--h:.5"></i><i style="--h:.75"></i><i style="--h:1"></i><i style="--h:.6"></i><i style="--h:.4"></i><i style="--h:.8"></i><i style="--h:.55"></i><i style="--h:.9"></i><i style="--h:.35"></i><i style="--h:.65"></i><i style="--h:.45"></i></span>
-                  <small>0:07</small>
-                </div>
-                <div class="typing pop" style="--t:4.3s"><i></i><i></i><i></i></div>
-              </div>
-              <div class="chat__input"><span data-i18n="composer">Сообщение</span><i></i></div>
-            </div>
-          </div>
-
-          <div class="scene__badge"><svg class="ico"><use href="#i-wifi"/></svg><span data-i18n="sceneLink">Wi-Fi · Bluetooth</span></div>
-          <div class="float float--1"><svg class="ico"><use href="#i-cloud-off"/></svg><span data-i18n="sceneNoServer">Сервер не участвует</span></div>
+          <div class="float float--1"><svg class="ico"><use href="#i-wifi"/></svg><span data-i18n="sceneLink">Wi-Fi · Bluetooth</span></div>
           <div class="float float--2"><svg class="ico"><use href="#i-lock"/></svg><span data-i18n="chip2">Шифруется на устройстве</span></div>
+          <div class="float float--3"><svg class="ico"><use href="#i-cloud-off"/></svg><span data-i18n="sceneNoServer">Сервер не участвует</span></div>
         </div>
       </div>
     </div>
