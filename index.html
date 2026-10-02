@@ -2,10 +2,11 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Dexichs — мессенджер, который связывает телефоны напрямую</title>
 <meta name="description" content="Dexichs находит собеседника рядом по Wi-Fi и Bluetooth и соединяется с ним без интернета. Переписка шифруется на устройстве. Ни номера телефона, ни почты.">
-<meta name="theme-color" content="#0a0a0b">
+<meta name="theme-color" content="#060608">
+<meta name="color-scheme" content="dark">
 <meta name="google-site-verification" content="8EN-TZUp0n8-IN4tslo_CdfUFhrkejA2eB2_Vl_a-yc">
 
 <link rel="canonical" href="https://dexichs.is-a.dev/">
@@ -67,13 +68,26 @@
 }
 </script>
 
+<!-- До первой отрисовки: помечаем, что скрипты есть (иначе разделы, которые
+     появляются при прокрутке, остались бы невидимыми без JS), и сразу берём
+     выбранный посетителем цвет — чтобы страница не мигнула синим. -->
+<script>
+  document.documentElement.classList.add("js");
+  try {
+    var t = localStorage.getItem("dexichs-tint");
+    if (t) document.documentElement.setAttribute("data-tint", t);
+  } catch (e) {}
+</script>
+
 <link rel="preload" href="assets/fonts/golostext-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<!-- Знак один на всю страницу: определён здесь, дальше подставляется ссылкой.
-     Две одинаковые фигуры и прямая между ними — ровно то, что делает
+<a class="skip" href="#main" data-i18n="skip">К содержанию</a>
+
+<!-- Знак и значки — один раз здесь, дальше подставляются ссылкой.
+     Знак: две одинаковые фигуры и прямая между ними — ровно то, что делает
      приложение, и ровно то, что нарисовано на иконке. -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
@@ -86,119 +100,315 @@
             stroke="currentColor" stroke-width="44" stroke-linecap="round"/>
     </g>
   </defs>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/><path d="M8 10h8M8 14h5"/></symbol>
+  <symbol id="i-call" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="14" rx="3"/><path d="M10 8.5v5l4.5-2.5z"/><path d="M8 21h8"/></symbol>
+  <symbol id="i-cards" viewBox="0 0 24 24"><rect x="2.5" y="5" width="11" height="15" rx="2" transform="rotate(-8 8 12.5)"/><rect x="10.5" y="4" width="11" height="15" rx="2" transform="rotate(8 16 11.5)"/><path d="M16 9.2c-.8-.9-2.2-.3-2 .8.2 1 2 2.3 2 2.3s1.8-1.3 2-2.3c.2-1.1-1.2-1.7-2-.8z"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+  <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="m3 3 18 18"/><path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/><path d="M9.9 4.2A9 9 0 0 1 12 4c7 0 10 8 10 8a13 13 0 0 1-1.7 2.7"/><path d="M6.6 6.6A13.5 13.5 0 0 0 2 12s3 8 10 8a9.7 9.7 0 0 0 5.4-1.6"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M4 22V4"/><path d="M4 4h13l-2 4 2 4H4"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="m19 6-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></symbol>
+  <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M5 12.6a11 11 0 0 1 14 0"/><path d="M1.5 9a16 16 0 0 1 21 0"/><path d="M8.5 16.1a6 6 0 0 1 7 0"/><path d="M12 20h.01"/></symbol>
+  <symbol id="i-server" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="7" rx="2"/><rect x="3" y="14" width="18" height="7" rx="2"/><path d="M7 6.5h.01M7 17.5h.01"/></symbol>
+  <symbol id="i-cloud-off" viewBox="0 0 24 24"><path d="m2 2 20 20"/><path d="M5.8 5.8A7 7 0 0 0 9 19h8.5c.4 0 .8 0 1.2-.1"/><path d="M21.6 15.6A4.5 4.5 0 0 0 17.5 10h-1.8A7 7 0 0 0 9.4 5"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="4.5"/><path d="m10.7 12.3 9.3-9.3"/><path d="m16 7 3 3"/><path d="m19 4 2 2"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2.5"/><path d="m22 7-10 6L2 7"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></symbol>
+  <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.5 5.1 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.5-6.9A2 2 0 0 0 16.8 4H7.2a2 2 0 0 0-1.7 1.1z"/></symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></symbol>
+  <symbol id="i-arrow-down" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="m6 13 6 6 6-6"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><path d="M12 18v4"/></symbol>
+  <symbol id="i-video" viewBox="0 0 24 24"><rect x="2" y="6" width="14" height="12" rx="2.5"/><path d="m16 10 6-4v12l-6-4"/></symbol>
+  <symbol id="i-screen" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2.5"/><path d="M8 21h8M12 17v4"/><path d="m9 10 3-3 3 3M12 7v6"/></symbol>
+  <symbol id="i-hangup" viewBox="0 0 24 24"><path d="M3.7 13.6a2 2 0 0 1-.5-2.1c.3-.8.8-1.4 1.5-1.9a13.5 13.5 0 0 1 14.6 0c.7.5 1.2 1.1 1.5 1.9a2 2 0 0 1-.5 2.1l-1.3 1.3a2 2 0 0 1-2.3.4l-1.8-.9a2 2 0 0 1-1.1-1.8V11a11 11 0 0 0-3.6 0v1.6a2 2 0 0 1-1.1 1.8l-1.8.9a2 2 0 0 1-2.3-.4z"/></symbol>
+  <symbol id="i-block" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m5.7 5.7 12.6 12.6"/></symbol>
+  <symbol id="i-user-x" viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 12.5-4.3"/><path d="m17 15 5 5M22 15l-5 5"/></symbol>
 </svg>
 
 <header class="top" id="top">
-  <div class="progress" aria-hidden="true"></div>
-  <div class="wrap top__row">
-    <a class="brand" href="#top">
-      <svg viewBox="96 90 520 520" aria-hidden="true"><use href="#mark" color="currentColor"/></svg>
-      <span>Dexichs</span>
-    </a>
-    <nav class="nav">
-      <a href="#how" data-i18n="navHow">Как работает</a>
-      <a href="#inside" data-i18n="navInside">Что внутри</a>
-      <a href="#privacy" data-i18n="navPrivacy">Приватность</a>
-      <a href="support.html" data-i18n="navSupport">Поддержка</a>
-    </nav>
-    <div class="lang" role="group" aria-label="Язык / Language">
-      <button type="button" data-lang="ru" aria-pressed="true">RU</button>
-      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+  <div class="wrap">
+    <div class="top__bar">
+      <a class="brand" href="#top">
+        <span class="brand__tile"><svg viewBox="96 90 520 520" aria-hidden="true"><use href="#mark"/></svg></span>
+        <span>Dexichs</span>
+      </a>
+      <nav class="nav" id="nav" aria-label="Разделы" data-i18n-aria="navLabel">
+        <a href="#how" data-i18n="navHow">Как работает</a>
+        <a href="#inside" data-i18n="navInside">Что внутри</a>
+        <a href="#privacy" data-i18n="navPrivacy">Приватность</a>
+        <a href="#faq" data-i18n="navFaq">Вопросы</a>
+        <a href="support.html" data-i18n="navSupport">Поддержка</a>
+      </nav>
+      <div class="top__end">
+        <div class="lang" role="group" aria-label="Язык / Language">
+          <button type="button" data-lang="ru" aria-pressed="true">RU</button>
+          <button type="button" data-lang="en" aria-pressed="false">EN</button>
+        </div>
+        <button class="burger" type="button" aria-expanded="false" aria-controls="nav"
+                aria-label="Меню" data-i18n-aria="menu"><span></span><span></span></button>
+      </div>
+      <div class="progress" aria-hidden="true"></div>
     </div>
   </div>
 </header>
 
-<main>
+<main id="main">
 
-  <section class="hero wrap">
-    <div class="hero__grid">
-      <div>
-        <p class="eyebrow" data-i18n="heroEyebrow">P2P · без сервера посередине</p>
+  <!-- ===== Первый экран ===== -->
+  <section class="hero">
+    <div class="hero__bg" aria-hidden="true"></div>
+    <div class="wrap hero__grid">
+      <div class="hero__copy">
+        <p class="pill"><span class="pill__dot"></span><span data-i18n="heroEyebrow">P2P · без сервера посередине</span></p>
         <h1 class="hero__title" data-i18n-html="heroTitle"><span class="line"><span>Связывает</span></span><span class="line"><span>два телефона</span></span><span class="line"><span><em>напрямую</em></span></span></h1>
-        <p class="lede" data-i18n="heroLede">Если собеседник рядом, интернет не нужен вовсе: приложение находит его по Wi-Fi или Bluetooth и соединяется само. Если далеко — сообщение доходит через ретранслятор, зашифрованным.</p>
-        <div class="hero__note">
-          <span class="chip" data-i18n="chip1">Без номера телефона</span>
-          <span class="chip" data-i18n="chip2">Шифруется на устройстве</span>
-          <span class="chip" data-i18n="chip3">iPhone · iOS 16+</span>
+        <p class="lede hero__lede" data-i18n="heroLede">Если собеседник рядом, интернет не нужен вовсе: приложение находит его по Wi-Fi или Bluetooth и соединяется само. Если далеко — сообщение доходит через ретранслятор, зашифрованным.</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="#how"><span data-i18n="ctaHow">Как это работает</span><svg class="ico" aria-hidden="true"><use href="#i-arrow-down"/></svg></a>
+          <a class="btn btn--ghost" href="#inside"><span data-i18n="ctaInside">Что внутри</span></a>
+        </div>
+        <ul class="hero__chips">
+          <li class="chip"><svg class="ico" aria-hidden="true"><use href="#i-user-x"/></svg><span data-i18n="chip1">Без номера телефона</span></li>
+          <li class="chip"><svg class="ico" aria-hidden="true"><use href="#i-lock"/></svg><span data-i18n="chip2">Шифруется на устройстве</span></li>
+          <li class="chip"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg><span data-i18n="chip3">iPhone · iOS 16+</span></li>
+        </ul>
+      </div>
+
+      <!-- Сцена: два телефона стоят так же, как фигуры на иконке, — по
+           диагонали, и связаны той же прямой. Переписка — иллюстрация того,
+           что приложение делает, а не снимок экрана. -->
+      <div class="hero__art" aria-hidden="true">
+        <div class="scene">
+          <div class="scene__glow"></div>
+          <svg class="scene__link" viewBox="0 0 60 64">
+            <line x1="22" y1="24" x2="38" y2="40" class="scene__beam"/>
+            <line x1="22" y1="24" x2="38" y2="40" class="scene__dash"/>
+            <circle r="0.9" class="scene__packet">
+              <animateMotion dur="1.8s" repeatCount="indefinite" path="M22,24 L38,40"
+                             calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines="0.65 0 0.35 1"/>
+            </circle>
+            <circle r="0.9" class="scene__packet">
+              <animateMotion dur="1.8s" begin="0.9s" repeatCount="indefinite" path="M38,40 L22,24"
+                             calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines="0.65 0 0.35 1"/>
+            </circle>
+          </svg>
+
+          <div class="phone phone--a">
+            <div class="phone__screen">
+              <div class="phone__status"><b>9:41</b><span class="bars"><i></i><i></i><i></i><i></i></span></div>
+              <div class="chat__head">
+                <span class="ava">M</span>
+                <span class="chat__who"><b>murad</b><small data-i18n="sceneNearby">рядом · без интернета</small></span>
+              </div>
+              <div class="chat__body">
+                <div class="msg msg--out msg--photo"><span class="photo"></span></div>
+                <div class="msg msg--out" data-i18n="m1">Сети нет вообще. Ты где?</div>
+                <div class="msg msg--in pop" style="--t:1.5s" data-i18n="m2">У костра, через две палатки 🏕</div>
+                <div class="msg msg--out msg--voice pop" style="--t:2.9s">
+                  <i class="voice__play"></i>
+                  <span class="wave"><i style="--h:.35"></i><i style="--h:.6"></i><i style="--h:.9"></i><i style="--h:.5"></i><i style="--h:.75"></i><i style="--h:1"></i><i style="--h:.6"></i><i style="--h:.4"></i><i style="--h:.8"></i><i style="--h:.55"></i><i style="--h:.9"></i><i style="--h:.35"></i><i style="--h:.65"></i><i style="--h:.45"></i></span>
+                  <small>0:07</small>
+                </div>
+              </div>
+              <div class="chat__input"><span data-i18n="composer">Сообщение</span><i></i></div>
+            </div>
+          </div>
+
+          <div class="phone phone--b">
+            <div class="phone__screen">
+              <div class="phone__status"><b>9:41</b><span class="bars"><i></i><i></i><i></i><i></i></span></div>
+              <div class="chat__head">
+                <span class="ava ava--b">A</span>
+                <span class="chat__who"><b>aysel</b><small data-i18n="sceneNearby">рядом · без интернета</small></span>
+              </div>
+              <div class="chat__body">
+                <div class="msg msg--in msg--photo"><span class="photo"></span></div>
+                <div class="msg msg--in" data-i18n="m1">Сети нет вообще. Ты где?</div>
+                <div class="msg msg--out pop" style="--t:0.9s" data-i18n="m2">У костра, через две палатки 🏕</div>
+                <div class="msg msg--in msg--voice pop" style="--t:3.5s">
+                  <i class="voice__play"></i>
+                  <span class="wave"><i style="--h:.35"></i><i style="--h:.6"></i><i style="--h:.9"></i><i style="--h:.5"></i><i style="--h:.75"></i><i style="--h:1"></i><i style="--h:.6"></i><i style="--h:.4"></i><i style="--h:.8"></i><i style="--h:.55"></i><i style="--h:.9"></i><i style="--h:.35"></i><i style="--h:.65"></i><i style="--h:.45"></i></span>
+                  <small>0:07</small>
+                </div>
+                <div class="typing pop" style="--t:4.3s"><i></i><i></i><i></i></div>
+              </div>
+              <div class="chat__input"><span data-i18n="composer">Сообщение</span><i></i></div>
+            </div>
+          </div>
+
+          <div class="scene__badge"><svg class="ico"><use href="#i-wifi"/></svg><span data-i18n="sceneLink">Wi-Fi · Bluetooth</span></div>
+          <div class="float float--1"><svg class="ico"><use href="#i-cloud-off"/></svg><span data-i18n="sceneNoServer">Сервер не участвует</span></div>
+          <div class="float float--2"><svg class="ico"><use href="#i-lock"/></svg><span data-i18n="chip2">Шифруется на устройстве</span></div>
         </div>
       </div>
-      <div class="hero__mark">
-        <svg viewBox="96 90 520 520" aria-label="Dexichs">
-          <rect x="118" y="112" width="196" height="196" rx="52" fill="none"
-                stroke="currentColor" stroke-width="44" class="draw" style="--len:900"/>
-          <line x1="300" y1="296" x2="412" y2="404" stroke="currentColor"
-                stroke-width="44" stroke-linecap="round" class="draw" style="--len:160"/>
-          <rect x="398" y="392" width="196" height="196" rx="52" fill="none"
-                stroke="currentColor" stroke-width="44" class="draw" style="--len:900"/>
-          <circle class="spark" r="15" fill="currentColor">
-            <animateMotion dur="2.6s" begin="1.2s" repeatCount="indefinite"
-                           keyPoints="0;1" keyTimes="0;1"
-                           calcMode="spline" keySplines="0.65 0 0.35 1"
-                           path="M300,296 L412,404"/>
-          </circle>
-        </svg>
-      </div>
     </div>
   </section>
 
-  <hr class="rule">
+  <!-- ===== Бегущая строка: только то, что и так сказано ниже ===== -->
+  <div class="ticker">
+    <div class="ticker__track">
+      <ul class="ticker__list">
+        <li data-i18n="mq1">Без номера телефона</li>
+        <li data-i18n="mq2">Без почты</li>
+        <li data-i18n="mq3">Без рекламы</li>
+        <li data-i18n="mq4">Без аналитики</li>
+        <li data-i18n="mq5">Без сторонних библиотек</li>
+        <li data-i18n="mq6">Рядом — без интернета</li>
+        <li data-i18n="mq7">Шифруется на устройстве</li>
+        <li data-i18n="mq8">Общаться — бесплатно</li>
+      </ul>
+      <ul class="ticker__list" aria-hidden="true">
+        <li data-i18n="mq1">Без номера телефона</li>
+        <li data-i18n="mq2">Без почты</li>
+        <li data-i18n="mq3">Без рекламы</li>
+        <li data-i18n="mq4">Без аналитики</li>
+        <li data-i18n="mq5">Без сторонних библиотек</li>
+        <li data-i18n="mq6">Рядом — без интернета</li>
+        <li data-i18n="mq7">Шифруется на устройстве</li>
+        <li data-i18n="mq8">Общаться — бесплатно</li>
+      </ul>
+    </div>
+  </div>
 
+  <!-- ===== Как работает ===== -->
   <section class="section wrap" id="how">
-    <p class="eyebrow" data-reveal data-i18n="howEyebrow">Как работает</p>
-    <h2 class="section__title" data-reveal data-i18n="howTitle">Две дороги до собеседника</h2>
-    <p class="lede" data-reveal data-i18n="howLede">Одна работает там, где нет сети вообще. Вторая — когда человек далеко. Переключить можно прямо в общей комнате, не заходя в настройки.</p>
+    <header class="section__head">
+      <p class="eyebrow" data-reveal data-i18n="howEyebrow">Как работает</p>
+      <h2 class="section__title" data-reveal data-i18n="howTitle">Две дороги до собеседника</h2>
+      <p class="lede" data-reveal data-i18n="howLede">Одна работает там, где нет сети вообще. Вторая — когда человек далеко. Переключить можно прямо в общей комнате, не заходя в настройки.</p>
+    </header>
 
-    <div class="pillars">
-      <div class="pillar" data-reveal>
-        <span class="pillar__num">01</span>
+    <div class="roads">
+      <article class="card road" data-reveal>
+        <div class="road__viz road__viz--near">
+          <span class="node"><svg class="ico"><use href="#i-phone"/></svg></span>
+          <span class="wire">
+            <span class="wire__line"></span>
+            <span class="wire__dot"></span>
+            <span class="wire__dot wire__dot--back"></span>
+            <span class="wire__label"><svg class="ico"><use href="#i-wifi"/></svg><span data-i18n="sceneLink">Wi-Fi · Bluetooth</span></span>
+          </span>
+          <span class="node"><svg class="ico"><use href="#i-phone"/></svg></span>
+          <span class="road__off"><svg class="ico"><use href="#i-cloud-off"/></svg><span data-i18n="dgNoServer">сервер не нужен</span></span>
+        </div>
+        <span class="road__num">01</span>
         <h3 data-i18n="p1t">Рядом — без интернета</h3>
         <p data-i18n="p1d">Wi-Fi и Bluetooth напрямую между телефонами. В самолёте, в метро, в горах, в лагере, при отключённой сети. Сервер в этом случае не участвует вовсе.</p>
-      </div>
-      <div class="pillar" data-reveal>
-        <span class="pillar__num">02</span>
+      </article>
+
+      <article class="card road" data-reveal>
+        <div class="road__viz road__viz--far">
+          <span class="node"><svg class="ico"><use href="#i-phone"/></svg></span>
+          <span class="wire wire--short"><span class="wire__line"></span><span class="wire__dot"></span></span>
+          <span class="relay">
+            <svg class="ico"><use href="#i-server"/></svg>
+            <span class="relay__bytes" data-scramble="6">8f3a·c1</span>
+          </span>
+          <span class="wire wire--short"><span class="wire__line"></span><span class="wire__dot wire__dot--late"></span></span>
+          <span class="node"><svg class="ico"><use href="#i-phone"/></svg></span>
+          <span class="road__off"><svg class="ico"><use href="#i-inbox"/></svg><span data-i18n="dgMailbox">ждёт в ящике, если вас нет в сети</span></span>
+        </div>
+        <span class="road__num">02</span>
         <h3 data-i18n="p2t">Далеко — через ретранслятор</h3>
         <p data-i18n="p2d">Он возит зашифрованные байты и не может их прочитать. Если вас нет в сети, сообщение ждёт в почтовом ящике и приходит, когда вы вернётесь.</p>
-      </div>
-      <div class="pillar" data-reveal>
-        <span class="pillar__num">03</span>
-        <h3 data-i18n="p3t">Имя вместо номера</h3>
-        <p data-i18n="p3d">Регистрация — это одно имя, которое вы придумываете сами. Оно закреплено за ключом вашего устройства: занять его чужому нельзя, а вы вернёте его после переустановки.</p>
-      </div>
+      </article>
+
+      <article class="card road road--wide" data-reveal>
+        <div class="road__text">
+          <span class="road__num">03</span>
+          <h3 data-i18n="p3t">Имя вместо номера</h3>
+          <p data-i18n="p3d">Регистрация — это одно имя, которое вы придумываете сами. Оно закреплено за ключом вашего устройства: занять его чужому нельзя, а вы вернёте его после переустановки.</p>
+        </div>
+        <div class="handle">
+          <div class="field field--yes">
+            <span class="field__at">@</span><span class="field__typed">aysel</span><span class="field__caret"></span>
+            <span class="field__tag"><svg class="ico"><use href="#i-key"/></svg><span data-i18n="nameBound">за ключом устройства</span></span>
+          </div>
+          <div class="field field--no">
+            <s>+ ••• ••• ••• ••</s>
+            <span class="field__tag"><span data-i18n="nameNoPhone">не нужен</span></span>
+          </div>
+          <div class="field field--no">
+            <s>name@mail.••</s>
+            <span class="field__tag"><span data-i18n="nameNoPhone">не нужен</span></span>
+          </div>
+        </div>
+      </article>
     </div>
   </section>
 
+  <!-- ===== Что внутри ===== -->
   <section class="section wrap" id="inside">
-    <p class="eyebrow" data-reveal data-i18n="insideEyebrow">Что внутри</p>
-    <h2 class="section__title" data-reveal data-i18n="insideTitle">Всё, что есть в приложении</h2>
-    <p class="lede" data-reveal data-i18n="insideLede">Ознакомительно: ниже перечислено то, что работает сегодня.</p>
+    <header class="section__head">
+      <p class="eyebrow" data-reveal data-i18n="insideEyebrow">Что внутри</p>
+      <h2 class="section__title" data-reveal data-i18n="insideTitle">Всё, что есть в приложении</h2>
+      <p class="lede" data-reveal data-i18n="insideLede">Ознакомительно: ниже перечислено то, что работает сегодня.</p>
+    </header>
 
-    <div class="features">
-      <div class="feature" data-reveal>
-        <h3 data-i18n="f1t">Переписка</h3>
-        <ul>
-          <li data-i18n="f1a">Текст, фотографии, стикеры, голосовые</li>
-          <li data-i18n="f1b">Ответы на сообщение и правка отправленного</li>
-          <li data-i18n="f1c">Поиск по переписке и пересылка</li>
-          <li data-i18n="f1d">Группы и общая комната</li>
-        </ul>
-      </div>
-      <div class="feature" data-reveal>
-        <h3 data-i18n="f2t">Звонки</h3>
-        <ul>
-          <li data-i18n="f2a">Голос и видео, один на один и компанией</li>
-          <li data-i18n="f2b">Демонстрация экрана</li>
-          <li data-i18n="f2c">Приходят как обычный звонок телефона</li>
-        </ul>
-      </div>
-      <div class="feature" data-reveal>
+    <div class="bento">
+      <article class="card feature feature--wide" data-reveal>
+        <div class="feature__text">
+          <span class="feature__icon"><svg class="ico"><use href="#i-chat"/></svg></span>
+          <h3 data-i18n="f1t">Переписка</h3>
+          <ul>
+            <li data-i18n="f1a">Текст, фотографии, стикеры, голосовые</li>
+            <li data-i18n="f1b">Ответы на сообщение и правка отправленного</li>
+            <li data-i18n="f1c">Поиск по переписке и пересылка</li>
+            <li data-i18n="f1d">Группы и общая комната</li>
+          </ul>
+        </div>
+        <div class="mini-chat" aria-hidden="true">
+          <div class="msg msg--in" data-i18n="vReplyQ">Где встречаемся?</div>
+          <div class="msg msg--out msg--reply">
+            <span class="quote"><b>aysel</b><span data-i18n="vReplyQ">Где встречаемся?</span></span>
+            <span data-i18n="vReplyA">У входа, в семь</span>
+            <small class="edited" data-i18n="vEdited">изменено</small>
+          </div>
+          <div class="sticker">🦊</div>
+        </div>
+      </article>
+
+      <article class="card feature feature--wide" data-reveal>
+        <div class="feature__text">
+          <span class="feature__icon"><svg class="ico"><use href="#i-call"/></svg></span>
+          <h3 data-i18n="f2t">Звонки</h3>
+          <ul>
+            <li data-i18n="f2a">Голос и видео, один на один и компанией</li>
+            <li data-i18n="f2b">Демонстрация экрана</li>
+            <li data-i18n="f2c">Приходят как обычный звонок телефона</li>
+          </ul>
+        </div>
+        <div class="mini-call" aria-hidden="true">
+          <div class="mini-call__people">
+            <span class="ava ava--lg is-talking">A</span>
+            <span class="ava ava--lg ava--b">M</span>
+            <span class="ava ava--lg ava--c">N</span>
+          </div>
+          <div class="mini-call__bar">
+            <span><svg class="ico"><use href="#i-mic"/></svg></span>
+            <span><svg class="ico"><use href="#i-video"/></svg></span>
+            <span><svg class="ico"><use href="#i-screen"/></svg></span>
+            <span class="is-end"><svg class="ico"><use href="#i-hangup"/></svg></span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card feature" data-reveal>
+        <span class="feature__icon"><svg class="ico"><use href="#i-play"/></svg></span>
         <h3 data-i18n="f3t">Смотреть вместе</h3>
         <ul>
           <li data-i18n="f3a">YouTube, TikTok, VK Видео или прямая ссылка</li>
           <li data-i18n="f3b">Ведущий управляет, остальные подтягиваются</li>
           <li data-i18n="f3c">Свой чат и голос в комнате</li>
         </ul>
-      </div>
-      <div class="feature" data-reveal>
+        <div class="mini-player" aria-hidden="true"><i class="mini-player__play"></i><span class="mini-player__bar"><span></span></span><span class="mini-player__who"><i>A</i><i>M</i><i>N</i></span></div>
+      </article>
+
+      <article class="card feature" data-reveal>
+        <span class="feature__icon"><svg class="ico"><use href="#i-cards"/></svg></span>
         <h3 data-i18n="f4t">Игры для компании</h3>
         <ul>
           <li data-i18n="f4a">Дурак, Мафия, Шпион, Слова</li>
@@ -206,8 +416,11 @@
           <li data-i18n="f4c">Статистика переживает переустановку</li>
           <li data-i18n="f4d">Работают и без интернета, если все рядом</li>
         </ul>
-      </div>
-      <div class="feature" data-reveal>
+        <div class="suits" aria-hidden="true"><span>♠</span><span class="red">♥</span><span>♣</span><span class="red">♦</span></div>
+      </article>
+
+      <article class="card feature" data-reveal>
+        <span class="feature__icon"><svg class="ico"><use href="#i-user"/></svg></span>
         <h3 data-i18n="f5t">Профиль</h3>
         <ul>
           <li data-i18n="f5a">Отображаемое имя, о себе, эмодзи-статус</li>
@@ -215,124 +428,236 @@
           <li data-i18n="f5c">Тёмная и светлая темы</li>
           <li data-i18n="f5d">Перенос аккаунта на другой телефон</li>
         </ul>
-      </div>
-      <div class="feature" data-reveal>
+        <div class="mini-profile" aria-hidden="true">
+          <span class="mini-profile__cover"></span>
+          <span class="ava ava--lg">A</span>
+          <span class="mini-profile__who">
+            <b>aysel <i>🌙</i></b>
+            <small data-i18n="vBio">люблю горы и тишину</small>
+          </span>
+        </div>
+      </article>
+
+      <article class="card feature" data-reveal>
+        <span class="feature__icon"><svg class="ico"><use href="#i-bell"/></svg></span>
         <h3 data-i18n="f6t">Уведомления</h3>
         <ul>
           <li data-i18n="f6a">Со звуком, беззвучно или выключены совсем</li>
           <li data-i18n="f6b">Имя и текст видны на закрытом телефоне</li>
           <li data-i18n="f6c">Расшифровываются у вас, а не по дороге</li>
         </ul>
-      </div>
-      <div class="feature" data-reveal>
+        <div class="notif" aria-hidden="true">
+          <img src="assets/icons/dexichs-64.png" alt="" width="30" height="30" loading="lazy" data-tint-icon="small">
+          <span class="notif__text"><b>aysel</b><span data-i18n="m2">У костра, через две палатки 🏕</span></span>
+          <small data-i18n="vNow">сейчас</small>
+        </div>
+      </article>
+
+      <article class="card feature" data-reveal>
+        <span class="feature__icon"><svg class="ico"><use href="#i-shield"/></svg></span>
         <h3 data-i18n="f7t">Порядок в сети</h3>
         <ul>
           <li data-i18n="f7a">Жалоба на человека или сообщение</li>
           <li data-i18n="f7b">Блокировка только для себя</li>
           <li data-i18n="f7c">Бан по ключу устройства, а не по имени</li>
         </ul>
-      </div>
-      <div class="feature" data-reveal>
+        <div class="mini-sheet" aria-hidden="true">
+          <span><svg class="ico"><use href="#i-flag"/></svg><span data-i18n="vReport">Пожаловаться</span></span>
+          <span class="is-danger"><svg class="ico"><use href="#i-block"/></svg><span data-i18n="vBlock">Заблокировать</span></span>
+        </div>
+      </article>
+
+      <article class="card feature" data-reveal>
+        <span class="feature__icon"><svg class="ico"><use href="#i-globe"/></svg></span>
         <h3 data-i18n="f8t">Три языка</h3>
         <p data-i18n="f8d">Интерфейс переведён целиком на русский, английский и азербайджанский. Имена людей, названия комнат и сами сообщения остаются как их написали.</p>
+        <div class="langs" aria-hidden="true"><span>Русский</span><span>English</span><span>Azərbaycan</span></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===== Оформление: цвет иконки перекрашивает и сайт ===== -->
+  <section class="section wrap" id="look">
+    <div class="look card" data-reveal>
+      <div class="look__text">
+        <p class="eyebrow" data-i18n="lookEyebrow">Оформление</p>
+        <h2 class="section__title" data-i18n-html="lookTitle">Своё лицо у приложения<br>и у вас</h2>
+        <p class="look__label" data-i18n="tintEyebrow">Цвет иконки</p>
+        <p class="lede" data-i18n="tintLede">Иконку на экране «Домой» можно перекрасить — восемь вариантов, меняется сразу.</p>
+
+        <div class="tints" role="radiogroup" aria-label="Цвет иконки" data-i18n-aria="tintEyebrow">
+          <button type="button" role="radio" aria-checked="false" data-tint="black"  data-src="assets/icons/dexichs-180.png"><img src="assets/icons/dexichs-64.png" alt="" width="48" height="48" loading="lazy"><span class="sr" data-i18n="tBlack">Чёрный</span></button>
+          <button type="button" role="radio" aria-checked="true"  data-tint="blue"   data-src="assets/icons/tint-blue.png"><img src="assets/icons/tint-blue.png" alt="" width="48" height="48" loading="lazy"><span class="sr" data-i18n="tBlue">Синий</span></button>
+          <button type="button" role="radio" aria-checked="false" data-tint="aqua"   data-src="assets/icons/tint-aqua.png"><img src="assets/icons/tint-aqua.png" alt="" width="48" height="48" loading="lazy"><span class="sr" data-i18n="tAqua">Бирюзовый</span></button>
+          <button type="button" role="radio" aria-checked="false" data-tint="green"  data-src="assets/icons/tint-green.png"><img src="assets/icons/tint-green.png" alt="" width="48" height="48" loading="lazy"><span class="sr" data-i18n="tGreen">Зелёный</span></button>
+          <button type="button" role="radio" aria-checked="false" data-tint="yellow" data-src="assets/icons/tint-yellow.png"><img src="assets/icons/tint-yellow.png" alt="" width="48" height="48" loading="lazy"><span class="sr" data-i18n="tYellow">Жёлтый</span></button>
+          <button type="button" role="radio" aria-checked="false" data-tint="red"    data-src="assets/icons/tint-red.png"><img src="assets/icons/tint-red.png" alt="" width="48" height="48" loading="lazy"><span class="sr" data-i18n="tRed">Красный</span></button>
+          <button type="button" role="radio" aria-checked="false" data-tint="purple" data-src="assets/icons/tint-purple.png"><img src="assets/icons/tint-purple.png" alt="" width="48" height="48" loading="lazy"><span class="sr" data-i18n="tPurple">Пурпурный</span></button>
+          <button type="button" role="radio" aria-checked="false" data-tint="grey"   data-src="assets/icons/tint-grey.png"><img src="assets/icons/tint-grey.png" alt="" width="48" height="48" loading="lazy"><span class="sr" data-i18n="tGrey">Серый</span></button>
+        </div>
+        <p class="look__hint"><span class="look__current" aria-live="polite">Синий</span> · <span data-i18n="tintHint">вместе с иконкой перекрашивается и этот сайт</span></p>
+      </div>
+
+      <div class="look__stage" aria-hidden="true">
+        <div class="home">
+          <span class="home__app"></span><span class="home__app"></span><span class="home__app"></span><span class="home__app"></span>
+          <span class="home__app"></span>
+          <span class="home__app home__app--me">
+            <img src="assets/icons/tint-blue.png" alt="" width="160" height="160" data-tint-icon="large">
+            <small>Dexichs</small>
+          </span>
+          <span class="home__app"></span><span class="home__app"></span>
+          <span class="home__app"></span><span class="home__app"></span><span class="home__app"></span><span class="home__app"></span>
+          <span class="home__dock"><i></i><i></i><i></i><i></i></span>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="section wrap" id="look">
-    <p class="eyebrow" data-reveal data-i18n="lookEyebrow">Оформление</p>
-    <h2 class="section__title" data-reveal data-i18n="lookTitle">Своё лицо у приложения<br>и у вас</h2>
-
-    <p class="eyebrow" style="margin-top:44px" data-reveal data-i18n="tintEyebrow">Цвет иконки</p>
-    <p class="lede" data-reveal data-i18n="tintLede">Иконку на экране «Домой» можно перекрасить — восемь вариантов, меняется сразу.</p>
-    <div class="tints" data-reveal>
-      <img src="assets/icons/dexichs-64.png" alt="Чёрный" loading="lazy" width="62" height="62">
-      <img src="assets/icons/tint-blue.png" alt="Синий" loading="lazy" width="62" height="62">
-      <img src="assets/icons/tint-aqua.png" alt="Бирюзовый" loading="lazy" width="62" height="62">
-      <img src="assets/icons/tint-green.png" alt="Зелёный" loading="lazy" width="62" height="62">
-      <img src="assets/icons/tint-yellow.png" alt="Жёлтый" loading="lazy" width="62" height="62">
-      <img src="assets/icons/tint-red.png" alt="Красный" loading="lazy" width="62" height="62">
-      <img src="assets/icons/tint-purple.png" alt="Пурпурный" loading="lazy" width="62" height="62">
-      <img src="assets/icons/tint-grey.png" alt="Серый" loading="lazy" width="62" height="62">
-    </div>
-  </section>
-
+  <!-- ===== Приватность ===== -->
   <section class="section wrap" id="privacy">
-    <p class="eyebrow" data-reveal data-i18n="privEyebrow">Приватность</p>
-    <h2 class="section__title" data-reveal data-i18n="privTitle">Что о вас известно и кому</h2>
+    <header class="section__head">
+      <p class="eyebrow" data-reveal data-i18n="privEyebrow">Приватность</p>
+      <h2 class="section__title" data-reveal data-i18n="privTitle">Что о вас известно и кому</h2>
+    </header>
 
     <dl class="facts">
-      <div class="fact" data-reveal>
-        <dt data-i18n="pr1t">Переписка</dt>
-        <dd data-i18n-html="pr1d"><strong>Шифруется на вашем устройстве</strong> ключом получателя и расшифровывается только у него. Ретранслятор видит набор байтов и имя адресата — этого хватает, чтобы переслать, и не хватает, чтобы прочитать.</dd>
+      <div class="card fact fact--wide" data-reveal>
+        <dt><span class="feature__icon"><svg class="ico"><use href="#i-lock"/></svg></span><span data-i18n="pr1t">Переписка</span></dt>
+        <dd>
+          <p data-i18n-html="pr1d"><strong>Шифруется на вашем устройстве</strong> ключом получателя и расшифровывается только у него. Ретранслятор видит набор байтов и имя адресата — этого хватает, чтобы переслать, и не хватает, чтобы прочитать.</p>
+          <!-- Путь одного сообщения: на концах — текст, посередине — только байты. -->
+          <div class="cipher" aria-hidden="true">
+            <div class="cipher__step">
+              <span class="cipher__label"><svg class="ico"><use href="#i-phone"/></svg><span data-i18n="encYou">Ваш телефон</span></span>
+              <div class="msg msg--out" data-i18n="encMsg">Встретимся у входа в семь</div>
+            </div>
+            <span class="cipher__arrow"><i></i></span>
+            <div class="cipher__step cipher__step--relay">
+              <span class="cipher__label"><svg class="ico"><use href="#i-server"/></svg><span data-i18n="encRelay">Видит ретранслятор</span></span>
+              <code class="cipher__blob" data-scramble="36">a9f3 0c7e 51b2 e8d4 77af 0b19 c3e2 5d80 f1</code>
+              <span class="cipher__to"><span data-i18n="encTo">кому</span>: @murad</span>
+            </div>
+            <span class="cipher__arrow"><i></i></span>
+            <div class="cipher__step">
+              <span class="cipher__label"><svg class="ico"><use href="#i-lock"/></svg><span data-i18n="encThem">Телефон собеседника</span></span>
+              <div class="msg msg--in" data-i18n="encMsg">Встретимся у входа в семь</div>
+            </div>
+          </div>
+        </dd>
       </div>
-      <div class="fact" data-reveal>
-        <dt data-i18n="pr2t">Не спрашиваем</dt>
+      <div class="card fact" data-reveal>
+        <dt><span class="feature__icon"><svg class="ico"><use href="#i-eye-off"/></svg></span><span data-i18n="pr2t">Не спрашиваем</span></dt>
         <dd data-i18n="pr2d">Номер телефона, адрес почты, настоящее имя, контакты из адресной книги, геопозицию. Рекламы нет, аналитика не подключена, сторонних библиотек в приложении нет вовсе.</dd>
       </div>
-      <div class="fact" data-reveal>
-        <dt data-i18n="pr3t">Уведомления</dt>
+      <div class="card fact" data-reveal>
+        <dt><span class="feature__icon"><svg class="ico"><use href="#i-bell"/></svg></span><span data-i18n="pr3t">Уведомления</span></dt>
         <dd data-i18n-html="pr3d">В толчок от Apple кладётся <strong>только зашифрованный кусок письма</strong>. Ни имени, ни текста в нём нет — сервер их и сам не знает. Настоящее имя появляется на экране уже у вас, ключом вашего телефона.</dd>
       </div>
-      <div class="fact" data-reveal>
-        <dt data-i18n="pr4t">Исключение</dt>
+      <div class="card fact" data-reveal>
+        <dt><span class="feature__icon"><svg class="ico"><use href="#i-flag"/></svg></span><span data-i18n="pr4t">Исключение</span></dt>
         <dd data-i18n-html="pr4d">Жалоба. Когда вы жалуетесь на сообщение, вы <strong>сами</strong> прикладываете его выдержку, и она сохраняется в открытом виде: иначе разбирать было бы нечего.</dd>
       </div>
-      <div class="fact" data-reveal>
-        <dt data-i18n="pr5t">Удаление</dt>
+      <div class="card fact" data-reveal>
+        <dt><span class="feature__icon"><svg class="ico"><use href="#i-trash"/></svg></span><span data-i18n="pr5t">Удаление</span></dt>
         <dd data-i18n-html="pr5d">Аккаунт удаляется прямо в приложении: <em>Профиль → Аккаунт → Удалить аккаунт</em>. Стираются имя, профиль, образ и статистика.</dd>
       </div>
     </dl>
 
-    <p class="lede" style="margin-top:34px" data-reveal>
-      <a href="privacy.html" data-i18n="privLink">Полная политика конфиденциальности →</a>
+    <p class="section__more" data-reveal>
+      <a class="btn btn--ghost" href="privacy.html"><span data-i18n="privLink">Полная политика конфиденциальности</span><svg class="ico" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
     </p>
   </section>
 
+  <!-- ===== Вопросы ===== -->
   <section class="section wrap" id="faq">
-    <p class="eyebrow" data-reveal data-i18n="faqEyebrow">Вопросы</p>
-    <h2 class="section__title" data-reveal data-i18n="faqTitle">Коротко о главном</h2>
+    <div class="faq">
+      <header class="faq__head">
+        <p class="eyebrow" data-reveal data-i18n="faqEyebrow">Вопросы</p>
+        <h2 class="section__title" data-reveal data-i18n="faqTitle">Коротко о главном</h2>
+        <div class="card ask" data-reveal>
+          <span class="feature__icon"><svg class="ico"><use href="#i-mail"/></svg></span>
+          <h3 data-i18n="faqAskT">Не нашли ответа?</h3>
+          <p data-i18n="faqAskD">Напишите на почту — отвечаем в течение суток.</p>
+          <a class="ask__mail" href="mailto:nijat85piriyev85@gmail.com">nijat85piriyev85@gmail.com</a>
+          <a class="ask__link" href="support.html"><span data-i18n="faqAskLink">Страница поддержки</span><svg class="ico" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+        </div>
+      </header>
 
-    <div class="qa">
-      <details data-reveal>
-        <summary data-i18n="q1">Правда работает без интернета?</summary>
-        <p data-i18n="a1">Да, если собеседник рядом — примерно в пределах комнаты или этажа. Телефоны находят друг друга по Wi-Fi и Bluetooth и соединяются напрямую. Интернет нужен только чтобы достать человека далеко.</p>
-      </details>
-      <details data-reveal>
-        <summary data-i18n="q2">Кто может прочитать мою переписку?</summary>
-        <p data-i18n="a2">Только тот, кому вы пишете. Сообщения шифруются на вашем устройстве ключом получателя. У нас нет ключа и нет способа его получить.</p>
-      </details>
-      <details data-reveal>
-        <summary data-i18n="q3">Я переустановил приложение — потеряю имя?</summary>
-        <p data-i18n="a3">Нет. Имя закреплено за ключом устройства, а ключ живёт в связке ключей и переживает переустановку. Вместе с именем возвращаются профиль и статистика игр.</p>
-      </details>
-      <details data-reveal>
-        <summary data-i18n="q4">Где скачать?</summary>
-        <p data-i18n="a4">Приложение готовится к публикации в App Store. Этот сайт — ознакомительный: здесь описано, что оно умеет. Ссылка появится здесь же, как только выйдет.</p>
-      </details>
-      <details data-reveal>
-        <summary data-i18n="q5">Сколько стоит?</summary>
-        <p data-i18n="a5">Переписка, звонки, игры и совместный просмотр — бесплатно. Платного доступа к общению нет и не планируется.</p>
-      </details>
-      <details data-reveal>
-        <summary data-i18n="q6">Что с Android?</summary>
-        <p data-i18n="a6">Пока только iPhone, iOS 16 и новее. Связь рядом построена на технологии Apple, и версия для Android потребует другой.</p>
-      </details>
+      <div class="qa">
+        <details data-reveal>
+          <summary data-i18n="q1">Правда работает без интернета?</summary>
+          <p data-i18n="a1">Да, если собеседник рядом — примерно в пределах комнаты или этажа. Телефоны находят друг друга по Wi-Fi и Bluetooth и соединяются напрямую. Интернет нужен только чтобы достать человека далеко.</p>
+        </details>
+        <details data-reveal>
+          <summary data-i18n="q2">Кто может прочитать мою переписку?</summary>
+          <p data-i18n="a2">Только тот, кому вы пишете. Сообщения шифруются на вашем устройстве ключом получателя. У нас нет ключа и нет способа его получить.</p>
+        </details>
+        <details data-reveal>
+          <summary data-i18n="q3">Я переустановил приложение — потеряю имя?</summary>
+          <p data-i18n="a3">Нет. Имя закреплено за ключом устройства, а ключ живёт в связке ключей и переживает переустановку. Вместе с именем возвращаются профиль и статистика игр.</p>
+        </details>
+        <details data-reveal>
+          <summary data-i18n="q4">Где скачать?</summary>
+          <p data-i18n="a4">Приложение готовится к публикации в App Store. Этот сайт — ознакомительный: здесь описано, что оно умеет. Ссылка появится здесь же, как только выйдет.</p>
+        </details>
+        <details data-reveal>
+          <summary data-i18n="q5">Сколько стоит?</summary>
+          <p data-i18n="a5">Переписка, звонки, игры и совместный просмотр — бесплатно. Платного доступа к общению нет и не планируется.</p>
+        </details>
+        <details data-reveal>
+          <summary data-i18n="q6">Что с Android?</summary>
+          <p data-i18n="a6">Пока только iPhone, iOS 16 и новее. Связь рядом построена на технологии Apple, и версия для Android потребует другой.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Статус: не ссылка на скачивание — её здесь нет и не будет ===== -->
+  <section class="wrap">
+    <div class="outro" data-reveal>
+      <div class="outro__glow" aria-hidden="true"></div>
+      <div class="outro__mark" aria-hidden="true">
+        <svg viewBox="96 90 520 520"><use href="#mark"/></svg>
+      </div>
+      <p class="pill"><span class="pill__dot"></span><span data-i18n="outroStatus">Готовится к публикации</span></p>
+      <h2 class="outro__title" data-i18n="outroTitle">Скоро в App Store</h2>
+      <p class="lede" data-i18n="outroText">Сайт ознакомительный: файла для установки здесь нет и не будет. Ссылка на App Store появится здесь же, как только приложение выйдет.</p>
+      <div class="outro__actions">
+        <a class="btn btn--ghost" href="privacy.html"><span data-i18n="fPrivacy">Политика конфиденциальности</span></a>
+        <a class="btn btn--ghost" href="support.html"><span data-i18n="fSupport">Поддержка</span></a>
+      </div>
     </div>
   </section>
 
 </main>
 
 <footer class="foot">
-  <div class="wrap foot__row">
-    <a class="brand" href="#top">
-      <svg viewBox="96 90 520 520" aria-hidden="true"><use href="#mark"/></svg>
-      <span>Dexichs</span>
-    </a>
-    <div class="foot__links">
-      <a href="privacy.html" data-i18n="fPrivacy">Политика конфиденциальности</a>
-      <a href="support.html" data-i18n="fSupport">Поддержка</a>
-      <a href="mailto:nijat85piriyev85@gmail.com">nijat85piriyev85@gmail.com</a>
+  <div class="wrap">
+    <div class="foot__grid">
+      <div class="foot__brand">
+        <a class="brand" href="#top">
+          <span class="brand__tile"><svg viewBox="96 90 520 520" aria-hidden="true"><use href="#mark"/></svg></span>
+          <span>Dexichs</span>
+        </a>
+        <p data-i18n="fTag">Мессенджер, который связывает телефоны напрямую.</p>
+      </div>
+      <div class="foot__col">
+        <p class="foot__h" data-i18n="fSections">Разделы</p>
+        <a href="#how" data-i18n="navHow">Как работает</a>
+        <a href="#inside" data-i18n="navInside">Что внутри</a>
+        <a href="#privacy" data-i18n="navPrivacy">Приватность</a>
+        <a href="#faq" data-i18n="navFaq">Вопросы</a>
+      </div>
+      <div class="foot__col">
+        <p class="foot__h" data-i18n="fDocs">Документы</p>
+        <a href="privacy.html" data-i18n="fPrivacy">Политика конфиденциальности</a>
+        <a href="support.html" data-i18n="fSupport">Поддержка</a>
+      </div>
+      <div class="foot__col">
+        <p class="foot__h" data-i18n="fContact">Связь</p>
+        <a href="mailto:nijat85piriyev85@gmail.com">nijat85piriyev85@gmail.com</a>
+      </div>
     </div>
     <p class="foot__note" data-i18n="fNote">Сайт ознакомительный. Приложение не распространяется отсюда: дождитесь публикации в App Store.</p>
   </div>
