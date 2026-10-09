@@ -386,6 +386,51 @@ h1, h2, h3 { font-weight: 800; letter-spacing: -0.02em; line-height: 1.08; margi
 .lang button:hover { color: var(--text); }
 .lang button[aria-pressed="true"] { background: var(--text); color: var(--bg); }
 
+/* Кнопка игры CS2 — крайняя справа. Цвет свой, золотой, как в самой игре:
+   акцент сайта меняется посетителем, а эта кнопка к мессенджеру не относится. */
+.play-cs2 {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 36px;
+  padding: 0 15px 0 12px;
+  border-radius: 999px;
+  background: #ffbe46;
+  color: #161006;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 8px 24px -12px rgba(255, 190, 70, 0.8);
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.play-cs2:hover {
+  background: #ffcd70;
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px -12px rgba(255, 190, 70, 0.95);
+}
+.play-cs2 svg {
+  width: 16px; height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+/* На телефоне в шапке тесно: знак, язык, CS2 и меню должны встать в одну строку. */
+@media (max-width: 480px) {
+  .top__bar { gap: 8px; padding: 0 8px 0 12px; }
+  .brand { gap: 9px; }
+  .top__end { gap: 6px; }
+  .lang button { padding: 6px 8px; }
+  .play-cs2 { height: 34px; padding: 0 10px; font-size: 11.5px; }
+  .play-cs2 svg { display: none; }
+}
+@media (max-width: 340px) {
+  .brand > span:last-child { display: none; }
+}
+
 .burger {
   display: none;
   place-content: center;

@@ -24,6 +24,7 @@
     navLabel: "Sections", menu: "Menu",
     navHow: "How it works", navInside: "What is inside",
     navPrivacy: "Privacy", navFaq: "FAQ", navSupport: "Support",
+    playCs2: "Play CS2",
 
     heroEyebrow: "P2P · no server in between",
     // Те же строки-маски, что и в русском варианте: иначе при переключении
