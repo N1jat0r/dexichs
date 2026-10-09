@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CS2 на pygame — de_mirage</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23111'/%3E%3Cpath d='M16 5v8M16 19v8M5 16h8M19 16h8' stroke='%23ffbe46' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<!--
+  Запускатель игры. Python здесь настоящий: Pyodide (CPython, собранный в WebAssembly)
+  и pygame-ce грузятся с jsDelivr, потом страница берёт game.py из этой же папки и запускает.
+  game.py — это cs2_web.py: свой экран загрузки, сжатый код игры, главный цикл на asyncio.
+
+  Обновить игру: заменить game.py новой сборкой. Браузер каждый раз сверяет файл с сервером,
+  так что новая версия подхватится без смены ссылок.
+-->
+<style>
+@font-face {
+  font-family: "Golos Text";
+  src: url("../assets/fonts/golostext-cyrillic.woff2") format("woff2");
+  font-weight: 400 900;
+  font-display: swap;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: "Golos Text";
+  src: url("../assets/fonts/golostext-latin.woff2") format("woff2");
+  font-weight: 400 900;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+2000-206F, U+2191, U+2193, U+2212;
+}
+
+:root {
+  --bg: #060608;
+  --card: #0e0e12;
+  --line: #24242c;
+  --text: #f4f4f6;
+  --dim: #9a9aa6;
+  --gold: #ffbe46;
+  --ok: #6ee67a;
+  --bad: #ff5a4e;
+  --cw: 960px;                /* размер картинки игры на экране — считает fit() */
+  --ch: 540px;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;           /* стрелки и пробел — игре, страница не листается */
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.45 "Golos Text", system-ui, sans-serif;
+}
+
+/* Игра. Размер задаёт страница (!important — сильнее, чем подгонка размера внутри самой игры):
+   картинка 16:9 вписывается в окно целиком, без полос прокрутки. */
+#stage {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+#canvas {
+  display: block;
+  width: var(--cw) !important;
+  height: var(--ch) !important;
+  outline: none;
+  background: #000;
+  cursor: crosshair;
+}
+
+/* Экран загрузки поверх игры */
+#boot {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background:
+    radial-gradient(900px 500px at 70% 20%, rgba(255, 190, 70, 0.10), transparent 70%),
+    var(--bg);
+  transition: opacity 0.25s;
+}
+#boot.gone { opacity: 0; pointer-events: none; }
+.card {
+  width: min(560px, 100%);
+  padding: 34px 36px 30px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--card);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+}
+.title {
+  margin: 0;
+  font-size: 64px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--gold);
+}
+.sub { margin: 8px 0 26px; color: var(--dim); }
+.steps { list-style: none; margin: 0 0 20px; padding: 0; }
+.steps li {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--dim);
+}
+.steps li:last-child { border-bottom: 0; }
+.steps li.run { color: var(--gold); }
+.steps li.done { color: var(--ok); }
+.steps li.err { color: var(--bad); }
+.steps .st { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.bar {
+  height: 6px;
+  margin-bottom: 22px;
+  overflow: hidden;
+  border-radius: 6px;
+  background: #1c1c22;
+}
+.bar i {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: 6px;
+  background: var(--gold);
+  transition: width 0.4s;
+}
+#play {
+  width: 100%;
+  padding: 16px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--gold);
+  color: #111;
+  font: 800 20px/1 "Golos Text", system-ui, sans-serif;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: transform 0.12s, opacity 0.2s;
+}
+#play:hover:not(:disabled) { transform: translateY(-1px); }
+#play:disabled { opacity: 0.45; cursor: default; }
+.hint { margin: 18px 0 0; font-size: 14px; color: var(--dim); }
+.hint b { color: var(--text); font-weight: 600; }
+#err {
+  display: none;
+  margin: 18px 0 0;
+  padding: 12px 14px;
+  max-height: 180px;
+  overflow: auto;
+  border: 1px solid rgba(255, 90, 78, 0.4);
+  border-radius: 12px;
+  background: rgba(255, 90, 78, 0.08);
+  color: #ffb3ad;
+  font: 13px/1.4 ui-monospace, Consolas, monospace;
+  white-space: pre-wrap;
+}
+#err.on { display: block; }
+.touch { display: none; color: var(--gold); }
+@media (hover: none) and (pointer: coarse) { .touch { display: block; } }
+
+/* Ошибка уже во время игры — полоска снизу, игра не закрывается */
+#toast {
+  position: fixed;
+  left: 50%;
+  bottom: 14px;
+  max-width: min(900px, 94vw);
+  padding: 10px 14px;
+  transform: translateX(-50%);
+  border-radius: 10px;
+  background: rgba(40, 10, 10, 0.92);
+  color: #ffb3ad;
+  font: 13px/1.4 ui-monospace, Consolas, monospace;
+  white-space: pre-wrap;
+  display: none;
+  cursor: pointer;
+}
+#toast.on { display: block; }
+</style>
+</head>
+<body>
+<div id="stage"><canvas id="canvas" width="960" height="540" tabindex="0"></canvas></div>
+
+<div id="boot">
+  <div class="card">
+    <h1 class="title">CS2</h1>
+    <p class="sub">de_mirage · pygame прямо в браузере</p>
+    <ul class="steps" id="steps">
+      <li data-k="py"><span>Python (Pyodide)</span><span class="st">ждёт</span></li>
+      <li data-k="pg"><span>pygame</span><span class="st">ждёт</span></li>
+      <li data-k="game"><span>Код игры</span><span class="st">ждёт</span></li>
+    </ul>
+    <div class="bar"><i id="bar"></i></div>
+    <button id="play" disabled>ЗАГРУЗКА…</button>
+    <p class="hint">
+      Первый запуск качает около 15&nbsp;МБ, потом всё берётся из кэша браузера.<br>
+      <b>Клик по игре</b> — управлять мышью, <b>Esc</b> — вернуть курсор, <b>F11</b> — во весь экран.
+    </p>
+    <p class="hint touch">Для игры нужны клавиатура и мышь — на телефоне поиграть не получится.</p>
+    <noscript><p class="hint" style="color:#ff5a4e">Включите JavaScript — без него Python в браузере не запустится.</p></noscript>
+    <div id="err"></div>
+  </div>
+</div>
+<div id="toast" title="Нажмите, чтобы скрыть"></div>
+
+<script>
+(function () {
+  'use strict';
+  var PYODIDE = 'https://cdn.jsdelivr.net/pyodide/v0.27.2/full/';
+  var GAME = 'game.py';
+  var CW = 960, CH = 540;
+
+  var canvas = document.getElementById('canvas');
+  var bootEl = document.getElementById('boot');
+  var playBtn = document.getElementById('play');
+  var errEl = document.getElementById('err');
+  var toast = document.getElementById('toast');
+  var bar = document.getElementById('bar');
+  var py = null, src = null, started = false;
+
+  // ---------- картинка игры: 16:9 во всё окно ----------
+  function fit() {
+    var k = Math.min(window.innerWidth / CW, window.innerHeight / CH);
+    var root = document.documentElement.style;
+    root.setProperty('--cw', Math.floor(CW * k) + 'px');
+    root.setProperty('--ch', Math.floor(CH * k) + 'px');
+  }
+  window.addEventListener('resize', fit);
+  fit();
+
+  function fullscreen() {
+    var d = document, el = d.documentElement;
+    if (d.fullscreenElement || d.webkitFullscreenElement) {
+      (d.exitFullscreen || d.webkitExitFullscreen).call(d);
+      return 'exit';
+    }
+    var f = el.requestFullscreen || el.webkitRequestFullscreen;
+    if (!f) return 'nofs';
+    try { var p = f.call(el); if (p && p.catch) p.catch(function () {}); } catch (e) { return 'err'; }
+    return 'enter';
+  }
+
+  // Игра умеет сама подгонять размер и включать полный экран (так было нужно в редакторе Алгоритмики).
+  // Здесь этим занимается страница: подменяем эти две функции, остальное (защита клавиш, аватарки) — как было.
+  setInterval(function () {
+    var V = window.cs2view;
+    if (V && !V.page) {
+      V.page = true;
+      V.apply = function () { fit(); return 'ok'; };
+      V.full = fullscreen;
+    }
+  }, 300);
+
+  canvas.addEventListener('contextmenu', function (e) { e.preventDefault(); });   // правая кнопка — игре
+
+  // ---------- этапы загрузки ----------
+  var T0 = performance.now(), cur = null, curT = 0;
+  function step(k, state, text) {
+    var li = document.querySelector('#steps li[data-k="' + k + '"]');
+    li.className = state;
+    li.querySelector('.st').textContent = text;
+  }
+  function begin(k) { cur = k; curT = performance.now(); step(k, 'run', 'идёт…'); }
+  function finish(k, part) {
+    step(k, 'done', ((performance.now() - curT) / 1000).toFixed(1) + ' с');
+    cur = null;
+    bar.style.width = part + '%';
+  }
+  setInterval(function () {      // секунды на текущем этапе — видно, что не зависло
+    if (cur) step(cur, 'run', 'идёт… ' + ((performance.now() - curT) / 1000).toFixed(0) + ' с');
+  }, 500);
+
+  function message(e) {
+    if (!e) return 'неизвестная ошибка';
+    var m = String(e.message || e);
+    return m.length > 4000 ? m.slice(-4000) : m;
+  }
+  function fail(e) {
+    if (cur) step(cur, 'err', 'ошибка');
+    cur = null;
+    errEl.textContent = message(e);
+    errEl.classList.add('on');
+    playBtn.disabled = false;
+    playBtn.textContent = 'ОБНОВИТЬ СТРАНИЦУ';
+    playBtn.onclick = function () { location.reload(); };
+    console.error(e);
+  }
+  function showToast(e) {
+    var m = message(e).split('\n').filter(Boolean);
+    toast.textContent = 'Ошибка в игре:\n' + m.slice(-6).join('\n');
+    toast.classList.add('on');
+  }
+  toast.onclick = function () { toast.classList.remove('on'); };
+
+  function loadScript(url) {
+    return new Promise(function (ok, no) {
+      var s = document.createElement('script');
+      s.src = url;
+      s.onload = ok;
+      s.onerror = function () { no(new Error('Не загрузился ' + url + '\nПроверьте интернет или отключите блокировщик.')); };
+      document.head.appendChild(s);
+    });
+  }
+
+  async function boot() {
+    if (typeof WebAssembly !== 'object') throw new Error('Этот браузер не умеет WebAssembly — откройте сайт в Chrome, Edge или Firefox.');
+    begin('py');
+    await loadScript(PYODIDE + 'pyodide.js');
+    py = await loadPyodide({
+      indexURL: PYODIDE,
+      stdout: function (t) { console.log(t); },
+      stderr: function (t) { console.warn(t); }
+    });
+    finish('py', 55);
+    begin('pg');
+    await py.loadPackage('pygame-ce', { messageCallback: function () {} });
+    finish('pg', 85);
+    begin('game');
+    var r = await fetch(GAME, { cache: 'no-cache' });      // всегда свежая версия (если не менялась — из кэша)
+    if (!r.ok) throw new Error('Не удалось скачать ' + GAME + ' (код ' + r.status + ')');
+    src = await r.text();
+    finish('game', 100);
+    playBtn.disabled = false;
+    playBtn.textContent = 'ИГРАТЬ';
+    playBtn.focus();
+  }
+
+  function play() {
+    if (started || !src) return;
+    started = true;                         // клик по кнопке нужен и браузеру: без него не включится звук
+    bootEl.classList.add('gone');
+    setTimeout(function () { bootEl.style.display = 'none'; }, 300);
+    playBtn.blur();
+    canvas.focus();
+    py.canvas.setCanvas2D(canvas);
+    py.runPythonAsync(src, { filename: 'game.py' }).catch(showToast);
+  }
+  playBtn.onclick = play;
+
+  window.addEventListener('unhandledrejection', function (e) {
+    if (started) showToast(e.reason);
+  });
+
+  boot().catch(fail);
+})();
+</script>
+</body>
+</html>
