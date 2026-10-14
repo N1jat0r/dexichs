@@ -25,6 +25,8 @@
     navHow: "How it works", navInside: "What is inside",
     navPrivacy: "Privacy", navFaq: "FAQ", navSupport: "Support",
     playCs2: "Play CS2",
+    cs2Cpp: "New version · 3D, shadows, runs on any PC",
+    cs2Py: "Classic version",
 
     heroEyebrow: "P2P · no server in between",
     // Те же строки-маски, что и в русском варианте: иначе при переключении
@@ -418,6 +420,35 @@
     });
     document.addEventListener("click", function (event) {
       if (top.classList.contains("is-open") && !top.contains(event.target)) setMenu(false);
+    });
+  }
+
+  /* ---- CS2: выбор версии (C++ или Python) ------------------------------
+     Без скрипта кнопка просто открывает версию на C++. */
+
+  var cs2Btn = document.querySelector(".cs2-pick .play-cs2");
+  var cs2Menu = document.getElementById("cs2-menu");
+
+  function setCs2(open) {
+    if (!cs2Btn || !cs2Menu) return;
+    cs2Menu.hidden = !open;
+    cs2Btn.setAttribute("aria-expanded", String(open));
+  }
+
+  if (cs2Btn && cs2Menu) {
+    cs2Btn.addEventListener("click", function (event) {
+      event.preventDefault();
+      setCs2(cs2Menu.hidden);
+      if (!cs2Menu.hidden) cs2Menu.querySelector("a").focus();
+    });
+    document.addEventListener("click", function (event) {
+      if (!cs2Menu.hidden && !cs2Menu.parentNode.contains(event.target)) setCs2(false);
+    });
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && !cs2Menu.hidden) {
+        setCs2(false);
+        cs2Btn.focus();
+      }
     });
   }
 

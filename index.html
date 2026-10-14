@@ -148,10 +148,23 @@
           <button type="button" data-lang="ru" aria-pressed="true">RU</button>
           <button type="button" data-lang="en" aria-pressed="false">EN</button>
         </div>
-        <a class="play-cs2" href="cs2/" aria-label="Играть в CS2" data-i18n-aria="playCs2">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="6.5"/><path d="M12 2.5v5M12 16.5v5M2.5 12h5M16.5 12h5"/></svg>
-          <span>CS2</span>
-        </a>
+        <div class="cs2-pick">
+          <a class="play-cs2" href="cs2/cpp/" aria-label="Играть в CS2" data-i18n-aria="playCs2"
+             aria-haspopup="true" aria-expanded="false" aria-controls="cs2-menu">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="6.5"/><path d="M12 2.5v5M12 16.5v5M2.5 12h5M16.5 12h5"/></svg>
+            <span>CS2</span>
+          </a>
+          <div class="cs2-menu" id="cs2-menu" hidden>
+            <a href="cs2/cpp/">
+              <b>C++</b>
+              <span data-i18n="cs2Cpp">Новая версия · 3D, тени, для любых ПК</span>
+            </a>
+            <a href="cs2/">
+              <b>Python</b>
+              <span data-i18n="cs2Py">Классическая версия</span>
+            </a>
+          </div>
+        </div>
         <button class="burger" type="button" aria-expanded="false" aria-controls="nav"
                 aria-label="Меню" data-i18n-aria="menu"><span></span><span></span></button>
       </div>

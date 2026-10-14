@@ -418,6 +418,35 @@ h1, h2, h3 { font-weight: 800; letter-spacing: -0.02em; line-height: 1.08; margi
   stroke-width: 2.2;
   stroke-linecap: round;
 }
+/* Выбор версии игры: C++ или Python — небольшое меню под кнопкой. */
+.cs2-pick { position: relative; }
+.cs2-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 60;
+  display: grid;
+  gap: 4px;
+  width: 260px;
+  padding: 6px;
+  border: 1px solid var(--line-2);
+  border-radius: 16px;
+  background: var(--bg-raise);
+  box-shadow: 0 18px 40px -16px rgba(0, 0, 0, 0.8);
+}
+.cs2-menu[hidden] { display: none; }
+.cs2-menu a {
+  display: grid;
+  gap: 3px;
+  padding: 10px 12px;
+  border-radius: 11px;
+  color: var(--text);
+  text-decoration: none;
+  transition: background-color 0.18s ease;
+}
+.cs2-menu a:hover, .cs2-menu a:focus-visible { background: rgba(255, 190, 70, 0.12); outline: none; }
+.cs2-menu b { font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; color: #ffbe46; }
+.cs2-menu span { font-size: 13px; color: var(--text-dim); }
 /* На телефоне в шапке тесно: знак, язык, CS2 и меню должны встать в одну строку. */
 @media (max-width: 480px) {
   .top__bar { gap: 8px; padding: 0 8px 0 12px; }
