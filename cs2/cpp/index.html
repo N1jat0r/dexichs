@@ -4,9 +4,17 @@
 <meta charset="utf-8">
 <meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700&display=swap" rel="stylesheet">
+<link rel="preload" href="fonts/exo2-cyr.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/exo2-lat.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+  /* Exo 2 (SIL Open Font License) — лежит рядом с игрой: работает без интернета и без Google */
+  @font-face { font-family: 'Exo 2'; font-style: normal; font-weight: 100 900; font-display: swap; src: url(fonts/exo2-cyr.woff2) format('woff2');
+               unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+  @font-face { font-family: 'Exo 2'; font-style: normal; font-weight: 100 900; font-display: swap; src: url(fonts/exo2-latx.woff2) format('woff2');
+               unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+  @font-face { font-family: 'Exo 2'; font-style: normal; font-weight: 100 900; font-display: swap; src: url(fonts/exo2-lat.woff2) format('woff2');
+               unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+</style>
 <title>CS2: C++ Edition — de_mirage</title>
 <style>
   html, body { margin: 0; height: 100%; background: #0b0a09; overflow: hidden; }
@@ -32,7 +40,7 @@
 <script>
 var Module = {
   // каждая сборка — свой номер: браузер не возьмёт старые cs2.js / cs2.wasm из кэша
-  locateFile: function(p){ return p + "?v=1792262222"; },
+  locateFile: function(p){ return p + "?v=1792263450"; },
   canvas: document.getElementById('canvas'),
   setStatus: function(t){
     var m = /\((\d+(\.\d+)?)\/(\d+)\)/.exec(t || '');
@@ -54,6 +62,6 @@ function cs2Fit(){
 addEventListener('resize', cs2Fit);
 cs2Fit();
 </script>
-<script async src="cs2.js?v=1792262222"></script>
+<script async src="cs2.js?v=1792263450"></script>
 </body>
 </html>
