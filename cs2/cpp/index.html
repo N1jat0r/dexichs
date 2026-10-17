@@ -32,7 +32,7 @@
 <script>
 var Module = {
   // каждая сборка — свой номер: браузер не возьмёт старые cs2.js / cs2.wasm из кэша
-  locateFile: function(p){ return p + "?v=1792257811"; },
+  locateFile: function(p){ return p + "?v=1792259359"; },
   canvas: document.getElementById('canvas'),
   setStatus: function(t){
     var m = /\((\d+(\.\d+)?)\/(\d+)\)/.exec(t || '');
@@ -54,6 +54,6 @@ function cs2Fit(){
 addEventListener('resize', cs2Fit);
 cs2Fit();
 </script>
-<script async src="cs2.js?v=1792257811"></script>
+<script async src="cs2.js?v=1792259359"></script>
 </body>
 </html>
