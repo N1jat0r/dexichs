@@ -447,6 +447,9 @@ h1, h2, h3 { font-weight: 800; letter-spacing: -0.02em; line-height: 1.08; margi
 .cs2-menu a:hover, .cs2-menu a:focus-visible { background: rgba(255, 190, 70, 0.12); outline: none; }
 .cs2-menu b { font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; color: #ffbe46; }
 .cs2-menu span { font-size: 13px; color: var(--text-dim); }
+/* Версия на Python временно закрыта: пункт виден, но не нажимается */
+.cs2-menu .cs2-off { display: grid; gap: 3px; padding: 10px 12px; border-radius: 11px; opacity: 0.45; cursor: not-allowed; }
+.cs2-menu .cs2-off b { color: var(--text-dim); }
 /* На телефоне в шапке тесно: знак, язык, CS2 и меню должны встать в одну строку. */
 @media (max-width: 480px) {
   .top__bar { gap: 8px; padding: 0 8px 0 12px; }

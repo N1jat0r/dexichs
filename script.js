@@ -26,7 +26,7 @@
     navPrivacy: "Privacy", navFaq: "FAQ", navSupport: "Support",
     playCs2: "Play CS2",
     cs2Cpp: "New version · 3D, shadows, runs on any PC",
-    cs2Py: "Classic version",
+    cs2Py: "Temporarily unavailable",
 
     heroEyebrow: "P2P · no server in between",
     // Те же строки-маски, что и в русском варианте: иначе при переключении
