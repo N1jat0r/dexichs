@@ -80,7 +80,7 @@
 </script>
 
 <link rel="preload" href="assets/fonts/golostext-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.css?v=4">
+<link rel="stylesheet" href="styles.css?v=5">
 </head>
 <body>
 
@@ -126,7 +126,6 @@
   <symbol id="i-screen" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2.5"/><path d="M8 21h8M12 17v4"/><path d="m9 10 3-3 3 3M12 7v6"/></symbol>
   <symbol id="i-hangup" viewBox="0 0 24 24"><path d="M3.7 13.6a2 2 0 0 1-.5-2.1c.3-.8.8-1.4 1.5-1.9a13.5 13.5 0 0 1 14.6 0c.7.5 1.2 1.1 1.5 1.9a2 2 0 0 1-.5 2.1l-1.3 1.3a2 2 0 0 1-2.3.4l-1.8-.9a2 2 0 0 1-1.1-1.8V11a11 11 0 0 0-3.6 0v1.6a2 2 0 0 1-1.1 1.8l-1.8.9a2 2 0 0 1-2.3-.4z"/></symbol>
   <symbol id="i-block" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m5.7 5.7 12.6 12.6"/></symbol>
-  <symbol id="i-check2" viewBox="0 0 24 24"><path d="m2 13 4 4 8-9"/><path d="m10 16 1 1 9-9"/></symbol>
 </svg>
 
 <header class="top" id="top">
@@ -157,8 +156,8 @@
 <main id="main">
 
   <!-- ===== Первый экран =====
-       Справа — не картинка «про связь», а сама связь: два телефона без сети,
-       одна и та же переписка на обоих и прямая между ними, как на знаке. -->
+       Справа — настоящий знак приложения, без выдуманных экранов: две фигуры
+       и прямая между ними. Прямая прочерчивается один раз при загрузке. -->
   <section class="hero">
     <div class="wrap hero__grid">
       <div class="hero__copy">
@@ -171,41 +170,15 @@
         <p class="hero__meta" data-i18n="heroMeta">iPhone, iOS 16 и новее · общаться бесплатно</p>
       </div>
 
-      <figure class="duo" aria-hidden="true">
-        <div class="duo__stage">
-          <div class="phone phone--a">
-            <div class="phone__screen">
-              <div class="phone__status"><b>21:40</b><span data-i18n="phNoNet">Нет сети</span></div>
-              <div class="phone__head">
-                <span class="ava ava--b">M</span>
-                <span class="phone__who"><b>murad</b><small data-i18n="phNearby">рядом · без интернета</small></span>
-              </div>
-              <div class="phone__chat">
-                <div class="msg msg--in" data-i18n="vReplyQ">Где встречаемся?</div>
-                <div class="msg msg--out"><span data-i18n="m2">У костра, через две палатки 🏕</span><svg class="msg__tick" aria-hidden="true"><use href="#i-check2"/></svg></div>
-              </div>
-              <div class="phone__input" data-i18n="phInput">Сообщение</div>
-            </div>
-          </div>
-
-          <div class="duo__link"><span class="duo__line"></span><span class="duo__dot"></span></div>
-
-          <div class="phone phone--b">
-            <div class="phone__screen">
-              <div class="phone__status"><b>21:40</b><span data-i18n="phNoNet">Нет сети</span></div>
-              <div class="phone__head">
-                <span class="ava">A</span>
-                <span class="phone__who"><b>aysel</b><small data-i18n="phNearby">рядом · без интернета</small></span>
-              </div>
-              <div class="phone__chat">
-                <div class="msg msg--out" data-i18n="vReplyQ">Где встречаемся?</div>
-                <div class="msg msg--in msg--new" data-i18n="m2">У костра, через две палатки 🏕</div>
-              </div>
-              <div class="phone__input" data-i18n="phInput">Сообщение</div>
-            </div>
-          </div>
+      <figure class="sign" aria-hidden="true">
+        <div class="sign__tile">
+          <svg viewBox="96 90 520 520">
+            <rect x="118" y="112" width="196" height="196" rx="52" fill="none" stroke="currentColor" stroke-width="44"/>
+            <rect x="398" y="392" width="196" height="196" rx="52" fill="none" stroke="currentColor" stroke-width="44"/>
+            <line class="sign__line" x1="300" y1="296" x2="412" y2="404" stroke-width="44" stroke-linecap="round"/>
+          </svg>
         </div>
-        <figcaption class="duo__caption">
+        <figcaption class="sign__caption">
           <span><svg class="ico"><use href="#i-wifi"/></svg><span data-i18n="sceneLink">Wi-Fi · Bluetooth</span></span>
           <span><svg class="ico"><use href="#i-cloud-off"/></svg><span data-i18n="sceneNoServer">Сервер не участвует</span></span>
         </figcaption>
@@ -280,8 +253,7 @@
   </section>
 
   <!-- ===== Что внутри =====
-       Две главные вещи мессенджера — переписка и звонки — показаны крупно,
-       с живыми макетами. Остальное — коротким списком, без картинок. -->
+       Только список того, что работает, — без нарисованных экранов. -->
   <section class="section wrap" id="inside">
     <header class="section__head">
       <p class="eyebrow" data-i18n="insideEyebrow">Что внутри</p>
@@ -289,54 +261,24 @@
       <p class="lede" data-reveal data-i18n="insideLede">Ознакомительно: ниже перечислено то, что работает сегодня.</p>
     </header>
 
-    <div class="spots">
-      <article class="card spot" data-reveal>
-        <div class="spot__text">
-          <h3><svg class="ico"><use href="#i-chat"/></svg><span data-i18n="f1t">Переписка</span></h3>
-          <ul>
-            <li data-i18n="f1a">Текст, фотографии, стикеры, голосовые</li>
-            <li data-i18n="f1b">Ответы на сообщение и правка отправленного</li>
-            <li data-i18n="f1c">Поиск по переписке и пересылка</li>
-            <li data-i18n="f1d">Группы и общая комната</li>
-          </ul>
-        </div>
-        <div class="mini-chat" aria-hidden="true">
-          <div class="msg msg--in" data-i18n="vReplyQ">Где встречаемся?</div>
-          <div class="msg msg--out msg--reply">
-            <span class="quote"><b>aysel</b><span data-i18n="vReplyQ">Где встречаемся?</span></span>
-            <span data-i18n="vReplyA">У входа, в семь</span>
-            <small class="edited" data-i18n="vEdited">изменено</small>
-          </div>
-          <div class="sticker">🦊</div>
-        </div>
-      </article>
-
-      <article class="card spot" data-reveal>
-        <div class="spot__text">
-          <h3><svg class="ico"><use href="#i-call"/></svg><span data-i18n="f2t">Звонки</span></h3>
-          <ul>
-            <li data-i18n="f2a">Голос и видео, один на один и компанией</li>
-            <li data-i18n="f2b">Демонстрация экрана</li>
-            <li data-i18n="f2c">Приходят как обычный звонок телефона</li>
-          </ul>
-        </div>
-        <div class="mini-call" aria-hidden="true">
-          <div class="mini-call__people">
-            <span class="ava ava--lg is-talking">A</span>
-            <span class="ava ava--lg ava--b">M</span>
-            <span class="ava ava--lg ava--c">N</span>
-          </div>
-          <div class="mini-call__bar">
-            <span><svg class="ico"><use href="#i-mic"/></svg></span>
-            <span><svg class="ico"><use href="#i-video"/></svg></span>
-            <span><svg class="ico"><use href="#i-screen"/></svg></span>
-            <span class="is-end"><svg class="ico"><use href="#i-hangup"/></svg></span>
-          </div>
-        </div>
-      </article>
-    </div>
-
     <div class="more">
+      <section class="item" data-reveal>
+        <h3><svg class="ico"><use href="#i-chat"/></svg><span data-i18n="f1t">Переписка</span></h3>
+        <ul>
+          <li data-i18n="f1a">Текст, фотографии, стикеры, голосовые</li>
+          <li data-i18n="f1b">Ответы на сообщение и правка отправленного</li>
+          <li data-i18n="f1c">Поиск по переписке и пересылка</li>
+          <li data-i18n="f1d">Группы и общая комната</li>
+        </ul>
+      </section>
+      <section class="item" data-reveal>
+        <h3><svg class="ico"><use href="#i-call"/></svg><span data-i18n="f2t">Звонки</span></h3>
+        <ul>
+          <li data-i18n="f2a">Голос и видео, один на один и компанией</li>
+          <li data-i18n="f2b">Демонстрация экрана</li>
+          <li data-i18n="f2c">Приходят как обычный звонок телефона</li>
+        </ul>
+      </section>
       <section class="item" data-reveal>
         <h3><svg class="ico"><use href="#i-play"/></svg><span data-i18n="f3t">Смотреть вместе</span></h3>
         <ul>
@@ -408,18 +350,10 @@
         <p class="look__hint"><span class="look__current" aria-live="polite">Синий</span> · <span data-i18n="tintHint">вместе с иконкой перекрашивается и этот сайт</span></p>
       </div>
 
+      <!-- Настоящая иконка в выбранном цвете — та самая, что ляжет на экран. -->
       <div class="look__stage" aria-hidden="true">
-        <div class="home">
-          <span class="home__app"></span><span class="home__app"></span><span class="home__app"></span><span class="home__app"></span>
-          <span class="home__app"></span>
-          <span class="home__app home__app--me">
-            <img src="assets/icons/tint-blue.png" alt="" width="160" height="160" data-tint-icon="large">
-            <small>Dexichs</small>
-          </span>
-          <span class="home__app"></span><span class="home__app"></span>
-          <span class="home__app"></span><span class="home__app"></span><span class="home__app"></span><span class="home__app"></span>
-          <span class="home__dock"><i></i><i></i><i></i><i></i></span>
-        </div>
+        <img class="look__icon" src="assets/icons/tint-blue.png" alt="" width="160" height="160" data-tint-icon="large">
+        <span class="look__name">Dexichs</span>
       </div>
     </div>
   </section>
@@ -573,6 +507,6 @@
   </div>
 </footer>
 
-<script src="script.js?v=4" defer></script>
+<script src="script.js?v=5" defer></script>
 </body>
 </html>

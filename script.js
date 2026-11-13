@@ -29,12 +29,6 @@
     heroLede: "When the other person is nearby, no internet is needed at all: the app finds them over Wi-Fi or Bluetooth and connects on its own. When they are far away, the message gets there through a relay, encrypted.",
     ctaHow: "How it works", ctaInside: "What is inside",
     heroMeta: "iPhone, iOS 16 and newer · talking is free",
-
-    // Два телефона на первом экране
-    phNoNet: "No service",
-    phNearby: "nearby · offline",
-    phInput: "Message",
-    m2: "By the campfire, two tents down 🏕",
     sceneLink: "Wi-Fi · Bluetooth",
     sceneNoServer: "No server involved",
 
@@ -61,9 +55,6 @@
     f1b: "Replies and editing what you sent",
     f1c: "Search through a conversation, and forwarding",
     f1d: "Groups and a public room",
-    vReplyQ: "Where do we meet?",
-    vReplyA: "At the entrance, at seven",
-    vEdited: "edited",
     f2t: "Calls",
     f2a: "Voice and video, one to one or as a group",
     f2b: "Screen sharing",
@@ -276,7 +267,7 @@
      ряду появлялась бы заметно позже остальных, и это читалось бы как
      подвисание, а не как замысел. */
 
-  [".roads", ".spots", ".more", ".facts", ".qa", ".section__head", ".faq__head"].forEach(function (selector) {
+  [".roads", ".more", ".facts", ".qa", ".section__head", ".faq__head"].forEach(function (selector) {
     each(selector, function (group) {
       Array.prototype.forEach.call(group.children, function (child, index) {
         child.style.setProperty("--d", Math.min(index * 0.05, 0.25) + "s");

@@ -375,7 +375,6 @@ h1, h2, h3 { font-weight: 500; line-height: 1.15; margin: 0; }
 }
 @media (max-width: 980px) {
   .hero__grid { grid-template-columns: minmax(0, 1fr); }
-  .duo { max-width: 520px; width: 100%; margin-inline: auto; }
 }
 
 .hero__title {
@@ -395,122 +394,38 @@ h1, h2, h3 { font-weight: 500; line-height: 1.15; margin: 0; }
 .hero__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
 .hero__meta { margin: 20px 0 0; font-size: 14px; color: var(--muted); }
 
-/* Одно появление на загрузке: текст, потом телефоны. */
-.hero__copy, .duo { animation: rise 0.5s var(--ease) both; }
-.duo { animation-delay: 0.08s; }
+/* Одно появление на загрузке: текст, потом знак. */
+.hero__copy, .sign { animation: rise 0.5s var(--ease) both; }
+.sign { animation-delay: 0.08s; }
 @keyframes rise {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: none; }
 }
 
-/* ---- Два телефона ------------------------------------------------------
-   Собраны в em, а em считается от ширины колонки: на телефоне и на широком
-   экране сцена одинаковая, только разного размера. Телефоны стоят по той же
-   диагонали, что и фигуры на знаке, и соединены той же прямой. */
+/* ---- Знак крупно -------------------------------------------------------
+   Настоящий знак приложения: две фигуры белым, перемычка — цветом акцента.
+   Перемычка прочерчивается один раз, как связь, которая установилась. */
 
-.duo { margin: 0; container-type: inline-size; }
-.duo__stage {
-  position: relative;
-  font-size: min(13px, calc(100cqi / 43));
-  width: 43em;
-  height: 44em;
-  margin-inline: auto;
-}
-
-.phone {
-  position: absolute;
-  width: 17em;
-  height: 35em;
-  padding: 0.5em;
-  border-radius: 3em;
+.sign { margin: 0; display: grid; justify-items: center; gap: 24px; }
+.sign__tile {
+  display: grid;
+  place-items: center;
+  width: min(360px, 72vw);
+  aspect-ratio: 1;
+  border-radius: 22.4%;
+  color: #fff;
   background: #000;
   border: 1px solid var(--line-2);
-  box-shadow: 0 2em 4em -2em rgba(0, 0, 0, 0.9);
+  box-shadow: 0 32px 64px -32px rgba(0, 0, 0, 0.9);
 }
-.phone--a { left: 0; top: 0; }
-.phone--b { right: 0; top: 9em; }
+.sign__tile svg { width: 60%; height: 60%; overflow: visible; }
+.sign__line {
+  stroke: var(--accent);
+  stroke-dasharray: 160;
+  animation: drawLine 0.6s var(--ease) 0.5s both;
+}
+@keyframes drawLine { from { stroke-dashoffset: 160; } to { stroke-dashoffset: 0; } }
 
-.phone__screen {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow: hidden;
-  border-radius: 2.5em;
-  background: var(--card);
-}
-.phone__screen::before {   /* вырез камеры */
-  content: "";
-  position: absolute;
-  left: 50%; top: 0.8em;
-  width: 5em; height: 1.4em;
-  margin-left: -2.5em;
-  border-radius: 1em;
-  background: #000;
-}
-.phone__status {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 3em;
-  padding: 0 1.6em;
-  font-size: 0.85em;
-}
-.phone__status b { font-weight: 600; }
-.phone__status span { color: var(--muted); font-size: 0.9em; }
-
-.phone__head {
-  display: flex;
-  align-items: center;
-  gap: 0.75em;
-  padding: 0.75em 1em;
-  border-bottom: 1px solid var(--line);
-}
-.phone__head .ava { width: 2.5em; height: 2.5em; font-size: 1em; }
-.phone__who { display: flex; flex-direction: column; min-width: 0; line-height: 1.25; }
-.phone__who b { font-weight: 500; font-size: 1em; }
-.phone__who small { font-size: 0.8em; color: var(--accent); white-space: nowrap; }
-
-.phone__chat {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  gap: 0.5em;
-  padding: 1em;
-}
-.phone__chat .msg { font-size: 1em; max-width: 88%; }
-.msg__tick { width: 1.1em; height: 1.1em; margin-left: 0.4em; vertical-align: -0.2em; fill: none; stroke: currentColor; stroke-width: 2; opacity: 0.8; }
-
-.phone__input {
-  margin: 0 0.75em 1.25em;
-  padding: 0.6em 1em;
-  border-radius: 1.4em;
-  border: 1px solid var(--line-2);
-  color: var(--muted);
-  font-size: 0.9em;
-}
-
-/* Линия связи: от правого края первого телефона к левому краю второго,
-   под 45° — как перемычка на знаке. */
-.duo__link {
-  position: absolute;
-  z-index: 2;
-  left: 17em; top: 15em;
-  width: 12.73em;
-  height: 2px;
-  margin-top: -1px;
-  transform: rotate(45deg);
-  transform-origin: 0 50%;
-}
-.duo__line {
-  position: absolute;
-  inset: 0;
-  background: var(--accent);
-  transform-origin: 0 50%;
-  animation: draw 0.5s var(--ease) 0.45s both;
-}
-.duo__dot,
 .wire__dot,
 .cipher__arrow i {
   position: absolute;
@@ -522,40 +437,20 @@ h1, h2, h3 { font-weight: 500; line-height: 1.15; margin: 0; }
   box-shadow: 0 0 0 3px var(--bg);
 }
 /* Точка проходит путь один раз и остаётся у получателя: сообщение дошло. */
-.duo__dot { left: 100%; animation: travel 0.9s var(--ease) 0.95s both; }
-@keyframes draw   { from { transform: scaleX(0); } }
 @keyframes travel { from { left: 0; opacity: 0; } 15% { opacity: 1; } to { left: 100%; opacity: 1; } }
 
-/* Входящее у получателя появляется, когда точка до него доехала. */
-.msg--new { animation: rise 0.4s var(--ease) 1.75s both; }
-
-.duo__caption {
+.sign__caption {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 8px 24px;
-  margin-top: 24px;
   font-size: 13px;
   color: var(--muted);
 }
-.duo__caption > span { display: inline-flex; align-items: center; gap: 8px; }
-.duo__caption .ico { width: 16px; height: 16px; }
+.sign__caption > span { display: inline-flex; align-items: center; gap: 8px; }
+.sign__caption .ico { width: 16px; height: 16px; }
 
-/* ---- Общие для иллюстраций: аватары и пузыри сообщений ------------------ */
-
-.ava {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 32px; height: 32px;
-  border-radius: 50%;
-  font-weight: 500;
-  font-size: 14px;
-  color: #fff;
-  background: var(--accent-fill);
-}
-.ava--b { background: #c4674f; }
-.ava--c { background: #2f9c86; }
+/* ---- Пузыри сообщений (схема шифрования) -------------------------------- */
 
 .msg {
   width: fit-content;
@@ -705,22 +600,8 @@ h1, h2, h3 { font-weight: 500; line-height: 1.15; margin: 0; }
   .field { font-size: 13px; padding-left: 12px; }
 }
 
-/* ---- Что внутри -------------------------------------------------------- */
+/* ---- Что внутри: восемь пунктов списком -------------------------------- */
 
-.spots { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-@media (max-width: 860px) { .spots { grid-template-columns: 1fr; } }
-
-.spot {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr);
-  gap: 24px;
-  align-items: center;
-  padding: 24px;
-}
-@media (max-width: 1060px) and (min-width: 861px) { .spot { grid-template-columns: 1fr; } }
-@media (max-width: 480px) { .spot { grid-template-columns: 1fr; } }
-
-.spot h3,
 .item h3 {
   display: flex;
   align-items: center;
@@ -729,12 +610,10 @@ h1, h2, h3 { font-weight: 500; line-height: 1.15; margin: 0; }
   letter-spacing: -0.01em;
   margin: 0 0 12px;
 }
-.spot h3 .ico,
 .item h3 .ico,
 .fact dt .ico,
 .ask h3 .ico { color: var(--muted); }
 
-.spot ul,
 .item ul {
   margin: 0;
   padding: 0;
@@ -744,9 +623,7 @@ h1, h2, h3 { font-weight: 500; line-height: 1.15; margin: 0; }
   color: var(--text-2);
   font-size: 15px;
 }
-.spot li,
 .item li { position: relative; padding-left: 16px; line-height: 1.5; }
-.spot li::before,
 .item li::before {
   content: "";
   position: absolute;
@@ -758,63 +635,18 @@ h1, h2, h3 { font-weight: 500; line-height: 1.15; margin: 0; }
 
 .more {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 40px 32px;
-  margin-top: 64px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 48px 32px;
 }
-@media (max-width: 860px) { .more { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 1060px) { .more { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .more { grid-template-columns: minmax(0, 1fr); gap: 32px; } }
 .item { padding-top: 20px; border-top: 1px solid var(--line); }
 .item h3 { font-size: 17px; }
 .item p { margin: 0; color: var(--text-2); font-size: 15px; }
 
-/* Макеты внутри карточек: переписка и звонок. */
-.mini-chat,
-.mini-call {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 16px;
-  border-radius: 12px;
-  border: 1px solid var(--line);
-  background: var(--bg-deep);
-}
-.mini-chat .msg { font-size: 13px; }
-.msg--reply { display: flex; flex-direction: column; gap: 2px; }
-.quote {
-  display: flex;
-  flex-direction: column;
-  padding: 2px 0 2px 8px;
-  margin-bottom: 4px;
-  border-left: 2px solid currentColor;
-  font-size: 12px;
-  opacity: 0.82;
-  line-height: 1.3;
-}
-.quote b { font-weight: 600; }
-.edited { font-size: 11px; opacity: 0.72; align-self: flex-end; }
-.sticker { align-self: flex-end; font-size: 44px; line-height: 1; }
-
-.mini-call { align-items: center; gap: 16px; padding-block: 24px; }
-.mini-call__people { display: flex; gap: 12px; }
-.ava--lg { width: 56px; height: 56px; font-size: 20px; }
-/* Кто говорит — тонкое кольцо, как в самом приложении. Без пульсации. */
-.is-talking { box-shadow: 0 0 0 2px var(--bg-deep), 0 0 0 4px var(--accent); }
-.mini-call__bar { display: flex; gap: 8px; }
-.mini-call__bar span {
-  display: grid;
-  place-items: center;
-  width: 40px; height: 40px;
-  border-radius: 50%;
-  background: var(--raised);
-  color: var(--text-2);
-}
-.mini-call__bar .ico { width: 18px; height: 18px; }
-.mini-call__bar .is-end { background: #d9443a; color: #fff; }
-
 /* ---- Оформление: выбор цвета -------------------------------------------
-   Здесь цвет иконки — главное, поэтому всё вокруг нейтральное: экран
-   «Домой» без цветных обоев, чтобы читалась только иконка. */
+   Здесь цвет иконки — главное, поэтому всё вокруг нейтральное: справа
+   только сама иконка в выбранном цвете. */
 
 .look {
   display: grid;
@@ -855,42 +687,24 @@ h1, h2, h3 { font-weight: 500; line-height: 1.15; margin: 0; }
 .look__hint { margin: 16px 0 0; color: var(--muted); font-size: 14px; }
 .look__current { color: var(--text); font-weight: 500; }
 
-.look__stage { display: grid; place-items: center; }
-.home {
-  position: relative;
-  width: min(300px, 100%);
+.look__stage {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px 16px;
-  padding: 32px 20px 16px;
-  border-radius: 40px;
-  border: 1px solid var(--line-2);
-  background: linear-gradient(180deg, #1a1e28, #11141c);
-  box-shadow: 0 32px 64px -32px rgba(0, 0, 0, 0.9);
+  justify-items: center;
+  align-content: center;
+  gap: 12px;
+  min-height: 240px;
+  border-radius: var(--r-card);
+  background: var(--bg-deep);
+  border: 1px solid var(--line);
 }
-.home__app { aspect-ratio: 1; border-radius: 22.4%; background: rgba(238, 240, 245, 0.07); }
-.home__app--me { position: relative; background: none; }
-.home__app--me img { width: 100%; height: 100%; border-radius: 22.4%; box-shadow: 0 0 0 1px var(--line); }
-.home__app--me img.is-bump { animation: swap 0.25s var(--ease); }
+.look__icon {
+  width: 120px; height: 120px;
+  border-radius: 22.4%;
+  box-shadow: 0 0 0 1px var(--line), 0 24px 48px -24px rgba(0, 0, 0, 0.9);
+}
+.look__icon.is-bump { animation: swap 0.25s var(--ease); }
 @keyframes swap { from { opacity: 0.4; transform: scale(0.94); } }
-.home__app--me small {
-  position: absolute;
-  left: 50%; top: calc(100% + 4px);
-  transform: translateX(-50%);
-  font-size: 10px;
-  color: var(--text);
-}
-.home__dock {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  margin-top: 12px;
-  padding: 12px;
-  border-radius: 24px;
-  background: rgba(238, 240, 245, 0.06);
-}
-.home__dock i { aspect-ratio: 1; border-radius: 22.4%; background: rgba(238, 240, 245, 0.08); }
+.look__name { font-size: 14px; color: var(--text); }
 
 /* ---- Приватность ------------------------------------------------------- */
 
