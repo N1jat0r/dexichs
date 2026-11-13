@@ -2,7 +2,7 @@
    Dexichs — поведение страницы
 
    Язык, цвет, появление разделов, шапка, мобильное меню, раскрытие
-   вопросов, «шифр» в схеме и оглавление документов. Каждый блок проверяет,
+   вопросов и оглавление документов. Каждый блок проверяет,
    есть ли на странице то, с чем он работает: один и тот же файл подключён
    и к главной, и к политике с поддержкой.
    ========================================================================= */
@@ -24,25 +24,19 @@
     navLabel: "Sections", menu: "Menu",
     navHow: "How it works", navInside: "What is inside",
     navPrivacy: "Privacy", navFaq: "FAQ", navSupport: "Support",
-    playCs2: "Play CS2",
-    cs2Cpp: "New version · 3D, shadows, runs on any PC",
-    cs2Py: "Temporarily unavailable",
 
-    heroEyebrow: "P2P · no server in between",
-    // Те же строки-маски, что и в русском варианте: иначе при переключении
-    // языка заголовок терял бы свою раскладку и въезд по строкам.
-    heroTitle: "<span class=\"line\"><span>Connects</span></span><span class=\"line\"><span>two phones</span></span><span class=\"line\"><span><em>directly</em></span></span>",
+    heroTitle: "Connects two phones directly",
     heroLede: "When the other person is nearby, no internet is needed at all: the app finds them over Wi-Fi or Bluetooth and connects on its own. When they are far away, the message gets there through a relay, encrypted.",
     ctaHow: "How it works", ctaInside: "What is inside",
-    chip1: "No phone number", chip2: "Encrypted on your device", chip3: "iPhone · iOS 16+",
+    heroMeta: "iPhone, iOS 16 and newer · talking is free",
 
+    // Два телефона на первом экране
+    phNoNet: "No service",
+    phNearby: "nearby · offline",
+    phInput: "Message",
     m2: "By the campfire, two tents down 🏕",
     sceneLink: "Wi-Fi · Bluetooth",
     sceneNoServer: "No server involved",
-
-    mq1: "No phone number", mq2: "No email", mq3: "No ads", mq4: "No analytics",
-    mq5: "No third-party libraries", mq6: "Nearby — no internet",
-    mq7: "Encrypted on your device", mq8: "Talking is free",
 
     howEyebrow: "How it works",
     howTitle: "Two roads to the other person",
@@ -88,17 +82,14 @@
     f5b: "Avatar, banner, name colour",
     f5c: "Dark and light themes",
     f5d: "Moving your account to another phone",
-    vBio: "into mountains and quiet",
     f6t: "Notifications",
     f6a: "With sound, silent, or off completely",
     f6b: "Name and text show on a closed phone",
     f6c: "Decrypted on your device, not on the way",
-    vNow: "now",
     f7t: "Keeping it civil",
     f7a: "Report a person or a message",
     f7b: "Block someone just for yourself",
     f7c: "Bans follow the device key, not the name",
-    vReport: "Report", vBlock: "Block",
     f8t: "Three languages",
     f8d: "The interface is fully translated into Russian, English and Azerbaijani. People's names, room titles and the messages themselves stay as they were written.",
 
@@ -285,70 +276,13 @@
      ряду появлялась бы заметно позже остальных, и это читалось бы как
      подвисание, а не как замысел. */
 
-  [".roads", ".bento", ".facts", ".qa", ".section__head", ".faq__head"].forEach(function (selector) {
+  [".roads", ".spots", ".more", ".facts", ".qa", ".section__head", ".faq__head"].forEach(function (selector) {
     each(selector, function (group) {
       Array.prototype.forEach.call(group.children, function (child, index) {
-        child.style.setProperty("--d", Math.min(index * 0.07, 0.35) + "s");
+        child.style.setProperty("--d", Math.min(index * 0.05, 0.25) + "s");
       });
     });
   });
-
-  /* ---- Свет под курсором на карточках ----------------------------------
-     Только для мыши: на сенсорном экране пятно застревало бы там, где
-     последний раз коснулись. */
-
-  if (window.matchMedia("(hover: hover)").matches) {
-    each(".card", function (card) {
-      card.addEventListener("pointermove", function (event) {
-        var box = card.getBoundingClientRect();
-        card.style.setProperty("--mx", (event.clientX - box.left) + "px");
-        card.style.setProperty("--my", (event.clientY - box.top) + "px");
-      });
-    });
-  }
-
-  /* ---- «Шифр»: что видит ретранслятор ----------------------------------
-     Байты меняются, пока схема на экране, — так понятнее, что это не текст,
-     а шум. Вне экрана и при «уменьшить движение» ничего не крутится. */
-
-  var HEX = "0123456789abcdef";
-  var blobs = document.querySelectorAll("[data-scramble]");
-
-  function noise(length, groups) {
-    var out = "";
-    for (var i = 0; i < length; i++) {
-      if (groups && i && i % 4 === 0) out += " ";
-      out += HEX.charAt(Math.floor(Math.random() * 16));
-    }
-    return out;
-  }
-
-  if (blobs.length && !still && "IntersectionObserver" in window) {
-    var visible = [];
-    var timer = null;
-    var watch = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        var at = visible.indexOf(entry.target);
-        if (entry.isIntersecting && at < 0) visible.push(entry.target);
-        if (!entry.isIntersecting && at >= 0) visible.splice(at, 1);
-      });
-      if (visible.length && !timer) {
-        timer = setInterval(function () {
-          visible.forEach(function (node) {
-            var size = +node.getAttribute("data-scramble");
-            node.textContent = size > 8 ? noise(size, true) : noise(4) + "·" + noise(2);
-          });
-        }, 140);
-      } else if (!visible.length && timer) {
-        clearInterval(timer);
-        timer = null;
-      }
-    });
-    Array.prototype.forEach.call(blobs, function (node) { watch.observe(node); });
-  }
-
-  // SVG-анимации (точки на линии связи) CSS не останавливает — только так.
-  if (still) each("svg", function (svg) { if (svg.pauseAnimations) svg.pauseAnimations(); });
 
   /* ---- Плавное раскрытие вопроса ---------------------------------------
      У <details> своей анимации нет: он открывается рывком. Оборачиваем ответ
@@ -420,35 +354,6 @@
     });
     document.addEventListener("click", function (event) {
       if (top.classList.contains("is-open") && !top.contains(event.target)) setMenu(false);
-    });
-  }
-
-  /* ---- CS2: выбор версии (C++ или Python) ------------------------------
-     Без скрипта кнопка просто открывает версию на C++. */
-
-  var cs2Btn = document.querySelector(".cs2-pick .play-cs2");
-  var cs2Menu = document.getElementById("cs2-menu");
-
-  function setCs2(open) {
-    if (!cs2Btn || !cs2Menu) return;
-    cs2Menu.hidden = !open;
-    cs2Btn.setAttribute("aria-expanded", String(open));
-  }
-
-  if (cs2Btn && cs2Menu) {
-    cs2Btn.addEventListener("click", function (event) {
-      event.preventDefault();
-      setCs2(cs2Menu.hidden);
-      if (!cs2Menu.hidden) cs2Menu.querySelector("a").focus();
-    });
-    document.addEventListener("click", function (event) {
-      if (!cs2Menu.hidden && !cs2Menu.parentNode.contains(event.target)) setCs2(false);
-    });
-    document.addEventListener("keydown", function (event) {
-      if (event.key === "Escape" && !cs2Menu.hidden) {
-        setCs2(false);
-        cs2Btn.focus();
-      }
     });
   }
 
